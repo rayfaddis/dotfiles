@@ -1,0 +1,28 @@
+# navigation
+alias ll="ls -al"
+
+# misc
+alias fix-camera="sudo killall VDCAssistant"
+alias flush-dns="sudo killall -HUP mDNSResponder; sudo killall mDNSResponderHelper; sudo dscacheutil -flushcache"
+
+# Ruby - basic conveniences
+alias brake="bundle exec rake"
+alias rails="bundle exec rails"
+alias rspec="bundle exec rspec"
+
+# Ruby - helpers
+alias rsnf="bundle exec rspec --pattern 'spec/**/*_spec.rb' --exclude-pattern 'spec/features/**/*_spec.rb'"
+
+# git
+alias gpfl="git push --force-with-lease" # alternative to oh-my-zsh ggfl
+alias gpr="git pull --rebase --autostash" # alternative to oh-my-zsh gupa
+alias gfp="git fetch --prune" # alternaitve to oh-my-zsh gfa
+
+# unix
+# alias ln="ln -v"
+# alias mkdir="mkdir -p"
+# alias e="$EDITOR"
+# alias v="$VISUAL"
+
+# Pretty print the path
+alias path='echo $PATH | tr -s ":" "\n"'
