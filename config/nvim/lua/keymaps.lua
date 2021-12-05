@@ -1,0 +1,5 @@
+-- faster window movement
+-- set_keymap('n', '<C-j>', '<C-w>j', noremap)
+-- set_keymap('n', '<C-k>', '<C-w>k', noremap)
+-- set_keymap('n', '<C-h>', '<C-w>h', noremap)
+-- set_keymap('n', '<C-l>', '<C-w>l', noremap)

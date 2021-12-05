@@ -3,10 +3,10 @@
 ## TODO
 
 - [x] Install NVIM Markdown previewer
-- [ ] Move NVIM config to lua script from vimscript
-- [ ] Move NVIM from vimplug to packer
-- [ ] Clean up NVIM configs
+- [x] Move NVIM config to lua script from vimscript
+- [x] Move NVIM from vimplug to packer
 - [x] Move entirely from dotfile-local to just dotfiles
+- [ ] Clean up NVIM configs
 - [ ] Test Brewfile
 - [ ] Execute Brewfile on rcup
 - [ ] Update Brewfile for Mac Apps
