@@ -11,6 +11,7 @@ end
 require('disable-builtins')
 require('settings')
 require('plugins')
+require('keymaps') -- move this to be loaded a different way
 
 local function source_files_from_dir(directory)
   for _, file in pairs(vim.fn.readdir(directory)) do
