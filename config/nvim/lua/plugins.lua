@@ -64,7 +64,8 @@ return require('packer').startup(function(use)
   use('tpope/vim-fugitive')
   use('tpope/vim-rhubarb')
   use('sindrets/diffview.nvim')
-  
+  use('APZelos/blamer.nvim')
+
   -- lanuage server
   use('neovim/nvim-lspconfig')
   use('hrsh7th/nvim-cmp')
