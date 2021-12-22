@@ -44,7 +44,10 @@ return require('packer').startup(function(use)
   use('pbrisbin/vim-mkdir')
   use('folke/trouble.nvim')
   use('nvim-lua/plenary.nvim')
-  use('nvim-telescope/telescope.nvim')
+  use({
+    'nvim-telescope/telescope.nvim',
+    commit = '80cdb00b221f69348afc4fb4b701f51eb8dd3120'
+  })
   use({
     'nvim-telescope/telescope-fzf-native.nvim',
     requires = { 'nvim-telescope/telescope.nvim' },
@@ -74,7 +77,10 @@ return require('packer').startup(function(use)
   use('hrsh7th/cmp-path')
   use('hrsh7th/cmp-cmdline')
   use('jose-elias-alvarez/nvim-lsp-ts-utils')
-  use('jose-elias-alvarez/null-ls.nvim')
+  use({
+    'jose-elias-alvarez/null-ls.nvim',
+    commit = '8828af78d8c2d96a884769a070951a47c2e6a6ff'
+  })
 
   -- language specific
   use({
