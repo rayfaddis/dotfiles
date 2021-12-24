@@ -34,11 +34,15 @@ return require('packer').startup(function(use)
   
   -- interface
   use('kyazdani42/nvim-tree.lua')
-  use('famiu/feline.nvim')
+  use({
+    'famiu/feline.nvim',
+    commit = '4ef5e1516395eea731275e0f58b6bfba5c6ac9c1'
+  })
   use('nanozuki/tabby.nvim')
   use('lukas-reineke/indent-blankline.nvim')
   use('MunifTanjim/nui.nvim')
   use('VonHeikemen/fine-cmdline.nvim')
+  use('glepnir/dashboard-nvim')
 
   -- utilities
   use('pbrisbin/vim-mkdir')
@@ -68,6 +72,8 @@ return require('packer').startup(function(use)
   use('tpope/vim-rhubarb')
   use('sindrets/diffview.nvim')
   use('APZelos/blamer.nvim')
+  -- use('ttys3/nvim-blamer.lua')
+  use('ruanyl/vim-gh-line')
 
   -- lanuage server
   use('neovim/nvim-lspconfig')
@@ -76,7 +82,10 @@ return require('packer').startup(function(use)
   use('hrsh7th/cmp-buffer')
   use('hrsh7th/cmp-path')
   use('hrsh7th/cmp-cmdline')
-  use('jose-elias-alvarez/nvim-lsp-ts-utils')
+  use({
+    'jose-elias-alvarez/nvim-lsp-ts-utils',
+    commit = '6814f3b7b4661213a837746bb461bad80c2fe526'
+  })
   use({
     'jose-elias-alvarez/null-ls.nvim',
     commit = '8828af78d8c2d96a884769a070951a47c2e6a6ff'
