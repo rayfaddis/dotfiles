@@ -24,7 +24,7 @@ end
 
 -- load all additional configs
 local lua_config_dir = vim.fn.stdpath('config') .. '/lua'
-local config_dirs = { 'plugins', 'lsp' }
+local config_dirs = { 'plugins', 'lsp', 'themes' }
 for _, dir in pairs(config_dirs) do
   source_files_from_dir(lua_config_dir .. '/' .. dir)
 end

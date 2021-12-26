@@ -23,6 +23,7 @@ vim.opt.expandtab = true
 -- STYLING
 --
 
+vim.opt.cursorline = true
 vim.opt.termguicolors = true
 -- nvim_create_augroup(
 --   'colorextend',

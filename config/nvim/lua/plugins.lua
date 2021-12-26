@@ -32,7 +32,8 @@ return require('packer').startup(function(use)
   
   -- interface
   use('kyazdani42/nvim-tree.lua')
-  use('famiu/feline.nvim')
+  use('nvim-lualine/lualine.nvim')
+  -- use('famiu/feline.nvim')
   use('nanozuki/tabby.nvim')
   use('lukas-reineke/indent-blankline.nvim')
   use('MunifTanjim/nui.nvim')
