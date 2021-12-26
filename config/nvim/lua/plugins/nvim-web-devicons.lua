@@ -1,16 +1,15 @@
 require('nvim-web-devicons').setup({
   override = {
     nvim = {
-      icon = "",
-      color = "#FFF",
-      name = "Nvim" 
+      icon = '',
+      color = '#FFF',
+      name = 'Nvim' 
     },
     vim = {
-      icon = "",
-      color = "#FFF",
-      name = "Vim"
+      icon = '',
+      color = '#FFF',
+      name = 'Vim'
     }
-  };
-
-  default = true;
+  },
+  default = true
 })

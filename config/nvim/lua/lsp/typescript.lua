@@ -1,9 +1,13 @@
-local lspconfig = require("lspconfig")
-local nvim_lsp_ts_utils = require("nvim-lsp-ts-utils")
+local lspconfig = require('lspconfig')
+local nvim_lsp_ts_utils = require('nvim-lsp-ts-utils')
 
 lspconfig.tsserver.setup({
   init_options = nvim_lsp_ts_utils.init_options,
   on_attach = function(client, bufnr)
+    -- disable typescript formatting as we are using null-ls config
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
+
     nvim_lsp_ts_utils.setup({
       debug = false,
       disable_commands = false,
@@ -27,7 +31,7 @@ lspconfig.tsserver.setup({
 
       -- inlay hints
       auto_inlay_hints = true,
-      inlay_hints_highlight = "Comment",
+      inlay_hints_highlight = 'Comment',
 
       -- update imports on file move
       update_imports_on_move = false,
@@ -40,58 +44,21 @@ lspconfig.tsserver.setup({
 
     -- no default maps, so you may want to define some here
     local opts = { silent = true }
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gs', ':TSLspOrganize<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gr', ':TSLspRenameFile<CR>', opts)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', ':TSLspImportAll<CR>', opts)
   end,
 })
 
-local null_ls = require("null-ls")
+local null_ls = require('null-ls')
 null_ls.setup({
+  debug = true,
   sources = {
     null_ls.builtins.diagnostics.eslint_d,
     null_ls.builtins.code_actions.eslint_d,
-    null_ls.builtins.formatting.prettier_d_slim,
+    null_ls.builtins.formatting.prettierd,
   },
   on_attach = function()
-    vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+    vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()')
   end
 })
--- local lsp_config = require('lspconfig')
--- local nvim_lsp_ts_utils = require("nvim-lsp-ts-utils")
---
--- local buf_map = function(bufnr, mode, lhs, rhs, opts)
---   vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts or {
---       silent = true,
---   })
--- end
---
--- lsp_config.tsserver.setup({
---   on_attach = function(client, bufnr)
---     client.resolved_capabilities.document_formatting = false
---     client.resolved_capabilities.document_range_formatting = false
---
---     nvim_lsp_ts_utils.setup({
---       eslint_bin = "eslint_d",
---       eslint_enable_diagnostics = true,
---       eslint_enable_code_actions = true,
---       enable_formatting = true,
---       formatter = "prettier_d_slim",
---     }
---     nvim_lsp_ts_utils.setup_client(client)
---
---     buf_map(bufnr, "n", "gs", ":TSLspOrganize<CR>")
---     buf_map(bufnr, "n", "gi", ":TSLspRenameFile<CR>")
---     buf_map(bufnr, "n", "go", ":TSLspImportAll<CR>")
---
---     -- format on save
---     vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
---   end
--- }
---
--- lsp_config["null-ls"].setup({
---   on_attach = function()
---     -- format on save
---     vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
---   end
--- })
