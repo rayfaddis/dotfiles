@@ -32,7 +32,8 @@ require('telescope').setup {
         '--iglob', '!tmp',
         '--hidden',
         '-u'
-      }
+      },
+      path_display = { "truncate" },
     }
   }
 }
