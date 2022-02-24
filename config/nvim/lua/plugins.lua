@@ -26,13 +26,14 @@ return require('packer').startup(function(use)
   -- editing
   use('vim-scripts/tComment')
   use('folke/todo-comments.nvim')
-  use('SirVer/ultisnips')
-  use('quangnguyen30192/cmp-nvim-ultisnips')
+  use('hrsh7th/vim-vsnip')
+  use('hrsh7th/cmp-vsnip')
   use('windwp/nvim-autopairs')
   
   -- interface
   use('kyazdani42/nvim-tree.lua')
-  use('nvim-lualine/lualine.nvim')
+  use('feline-nvim/feline.nvim')
+  -- use('nvim-lualine/lualine.nvim')
   -- use('famiu/feline.nvim')
   use('nanozuki/tabby.nvim')
   use('lukas-reineke/indent-blankline.nvim')
@@ -61,10 +62,10 @@ return require('packer').startup(function(use)
 
   -- git
   use('lewis6991/gitsigns.nvim')
-  use('tpope/vim-fugitive')
+  -- use('tpope/vim-fugitive')
   use('tpope/vim-rhubarb')
   use('sindrets/diffview.nvim')
-  use('APZelos/blamer.nvim')
+  -- use('APZelos/blamer.nvim')
   use('ruanyl/vim-gh-line')
 
   -- lanuage server
