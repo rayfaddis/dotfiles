@@ -1,5 +1,6 @@
 vim.g.mapleader = ' '
-vim.g.colors_name = 'onedark'
+-- vim.g.colors_name = 'onedark'
+vim.g.colors_name = 'vscode'
 
 --
 -- NAVIGATION
@@ -55,3 +56,8 @@ vim.opt.showbreak = 'i↪'
 -- make it obvious where 80 characters is
 vim.opt.textwidth = 80
 vim.opt.colorcolumn = '+1'
+
+-- -- code folding
+-- https://github.com/nvim-treesitter/nvim-treesitter#folding
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'

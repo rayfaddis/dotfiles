@@ -1,6 +1,6 @@
 require('nvim-treesitter.configs').setup({
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-  ensure_installed = "maintained",
+  ensure_installed = "all",
 
   -- Install languages synchronously (only applied to `ensure_installed`)
   sync_install = false,
@@ -21,4 +21,13 @@ require('nvim-treesitter.configs').setup({
     -- Instead of true it can also be a list of languages
     additional_vim_regex_highlighting = false,
   },
+
+  -- https://github.com/nvim-treesitter/nvim-treesitter#indentation
+  indent = {
+    enable = true
+  },
 })
+--
+-- https://github.com/nvim-treesitter/nvim-treesitter#folding
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'

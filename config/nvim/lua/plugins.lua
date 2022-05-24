@@ -24,7 +24,7 @@ return require('packer').startup(function(use)
   -- use('tpope/vim-surround')
 
   -- editing
-  use('vim-scripts/tComment')
+  use('numToStr/Comment.nvim')
   use('folke/todo-comments.nvim')
   use('hrsh7th/vim-vsnip')
   use('hrsh7th/cmp-vsnip')
@@ -32,14 +32,19 @@ return require('packer').startup(function(use)
   
   -- interface
   use('kyazdani42/nvim-tree.lua')
-  use('feline-nvim/feline.nvim')
-  -- use('nvim-lualine/lualine.nvim')
-  -- use('famiu/feline.nvim')
-  use('nanozuki/tabby.nvim')
+  use('akinsho/bufferline.nvim')
+  -- use('nanozuki/tabby.nvim')
   use('lukas-reineke/indent-blankline.nvim')
   use('MunifTanjim/nui.nvim')
   use('VonHeikemen/fine-cmdline.nvim')
   use('glepnir/dashboard-nvim')
+
+  -- status line
+  use('nvim-lualine/lualine.nvim')
+  use('SmiteshP/nvim-gps') -- show scope in status line
+  use('arkav/lualine-lsp-progress') -- lsp initializiation status
+  -- use('feline-nvim/feline.nvim')
+  -- use('famiu/feline.nvim')
 
   -- utilities
   use('pbrisbin/vim-mkdir')
@@ -59,6 +64,7 @@ return require('packer').startup(function(use)
   })
   use('tpope/vim-eunuch')
   use('folke/which-key.nvim')
+  use('aserowy/tmux.nvim')
 
   -- git
   use('lewis6991/gitsigns.nvim')
@@ -89,6 +95,7 @@ return require('packer').startup(function(use)
   -- themes
   -- use('joshdick/onedark.vim')
   use('navarasu/onedark.nvim')
+  use('Mofiqul/vscode.nvim')
 
   -- icons
   use('kyazdani42/nvim-web-devicons')
