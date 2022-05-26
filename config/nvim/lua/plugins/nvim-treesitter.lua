@@ -1,4 +1,9 @@
 require('nvim-treesitter.configs').setup({
+  -- endwise plugin
+  endwise = {
+    enable = true,
+  },
+
   -- One of "all", "maintained" (parsers with maintainers), or a list of languages
   ensure_installed = "all",
 
@@ -31,3 +36,4 @@ require('nvim-treesitter.configs').setup({
 -- https://github.com/nvim-treesitter/nvim-treesitter#folding
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldlevelstart = 99

@@ -4,5 +4,9 @@ vim.api.nvim_set_keymap('n', '<leader>s', ':TestNearest<CR>', map_options)
 vim.api.nvim_set_keymap('n', '<leader>l', ':TestLast<CR>', map_options)
 vim.api.nvim_set_keymap('n', '<leader>a', ':TestSuite<CR>', map_options)
 vim.api.nvim_set_keymap('n', '<leader>gt', ':TestVisit<CR>', map_options)
+vim.api.nvim_set_keymap('n', '<leader>gt', ':TestVisit<CR>', map_options)
+vim.api.nvim_set_keymap('t', '<C-o>', '<C-\\><C-n>', {})
 
-vim.g['test#strategy'] = 'make'
+vim.cmd([[
+  let test#javascript#jest#executable = 'yarn test'
+]])

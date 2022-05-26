@@ -1,6 +1,6 @@
 vim.g.mapleader = ' '
--- vim.g.colors_name = 'onedark'
-vim.g.colors_name = 'vscode'
+vim.g.colors_name = 'onedark'
+-- vim.g.colors_name = 'vscode'
 
 --
 -- NAVIGATION

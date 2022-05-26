@@ -17,7 +17,6 @@ end
 -- packer setup
 return require('packer').startup(function(use)
   -- use('tpope/vim-bundler')
-  -- use('tpope/vim-endwise')
   -- use('tpope/vim-projectionist')
   -- use('tpope/vim-rake')
   -- use('tpope/vim-repeat')
@@ -33,7 +32,6 @@ return require('packer').startup(function(use)
   -- interface
   use('kyazdani42/nvim-tree.lua')
   use('akinsho/bufferline.nvim')
-  -- use('nanozuki/tabby.nvim')
   use('lukas-reineke/indent-blankline.nvim')
   use('MunifTanjim/nui.nvim')
   use('VonHeikemen/fine-cmdline.nvim')
@@ -43,8 +41,6 @@ return require('packer').startup(function(use)
   use('nvim-lualine/lualine.nvim')
   use('SmiteshP/nvim-gps') -- show scope in status line
   use('arkav/lualine-lsp-progress') -- lsp initializiation status
-  -- use('feline-nvim/feline.nvim')
-  -- use('famiu/feline.nvim')
 
   -- utilities
   use('pbrisbin/vim-mkdir')
@@ -89,6 +85,7 @@ return require('packer').startup(function(use)
     'nvim-treesitter/nvim-treesitter',
     run = { ':TSUpdate' } -- update parsers on updates
   })
+  use('RRethy/nvim-treesitter-endwise')
   use('mogelbrod/vim-jsonpath')
   use('ellisonleao/glow.nvim') -- markdown previewer
 

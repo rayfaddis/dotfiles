@@ -14,6 +14,7 @@ local filename = {
 require('lualine').setup({
   options = {
     disabled_filetypes = { 'packer', 'NvimTree' },
+    theme = 'onedark',
     globalstatus = false,
   },
   sections = {
