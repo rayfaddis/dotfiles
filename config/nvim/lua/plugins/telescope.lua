@@ -18,20 +18,28 @@ require('telescope').setup {
       '--column',
       '--smart-case',
       '-u',
-      '-u'
+      '-u',
+
+      '--iglob', '!.git',
+      '--iglob', '!node_modules',
+      '--iglob', '!public',
+      '--iglob', '!tmp',
+      '--iglob', '!storage',
     },
   },
   pickers = {
     find_files = {
       find_command = {
         'rg',
+        '-u',
+
         '--files',
         '--iglob', '!.git',
         '--iglob', '!node_modules',
         '--iglob', '!public',
         '--iglob', '!tmp',
+        '--iglob', '!storage',
         '--hidden',
-        '-u'
       },
       path_display = { "truncate" },
     }

@@ -32,5 +32,5 @@ require('onedark').setup({
     undercurl = true,   -- use undercurl instead of underline for diagnostics
     background = false,    -- use background color for virtual text
   },
-}) 
+})
 require('onedark').load()

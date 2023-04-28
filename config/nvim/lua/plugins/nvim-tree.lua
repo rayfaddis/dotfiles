@@ -1,5 +1,15 @@
-local tree_cb = require('nvim-tree.config').nvim_tree_callback
+local width = 75
 
+-- local nvim_tree_events = require('nvim-tree.events')
+-- local bufferline_state = require('bufferline.state')
+-- nvim_tree_events.on_tree_open(function ()
+--   bufferline_state.set_offset(width, "File Tree")
+-- end)
+-- nvim_tree_events.on_tree_close(function ()
+--   bufferline_state.set_offset(0)
+-- end)
+
+local tree_cb = require('nvim-tree.config').nvim_tree_callback
 local list = {
   { key = '<C-s>', cb = tree_cb('split') },
 }
@@ -11,10 +21,10 @@ require('nvim-tree').setup({
   hijack_cursor = true,
   open_on_tab = false,
   update_focused_file = {
-    enable = "true",
+    enable = true,
   },
   view = {
-    width = 75,
+    width = width,
     mappings = {
       list = list
     }

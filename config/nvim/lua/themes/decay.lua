@@ -1,0 +1,13 @@
+-- require('decay').setup({
+--   cmp = {
+--     block_kind = false,
+--   },
+--   style = 'normal',
+--   italics = {
+--     code = true,
+--     comments = false -- to disable italic comments, replace to true to enable
+--   },
+--   nvim_tree = {
+--     contrast = true, -- or false to disable tree contrast
+--   },
+-- })

@@ -1,5 +1,8 @@
 vim.g.mapleader = ' '
-vim.g.colors_name = 'onedark'
+
+vim.g.background = 'dark'
+vim.g.colors_name = 'onedarkpro'
+-- vim.g.colors_name = 'onedark'
 -- vim.g.colors_name = 'vscode'
 
 --
@@ -19,6 +22,12 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+
+-- -- code folding
+-- https://github.com/nvim-treesitter/nvim-treesitter#folding
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldlevelstart = 99
 
 --
 -- STYLING
@@ -57,7 +66,4 @@ vim.opt.showbreak = 'i↪'
 vim.opt.textwidth = 80
 vim.opt.colorcolumn = '+1'
 
--- -- code folding
--- https://github.com/nvim-treesitter/nvim-treesitter#folding
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.cmdheight = 0

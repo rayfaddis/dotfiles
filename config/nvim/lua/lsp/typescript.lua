@@ -1,12 +1,15 @@
 local lspconfig = require('lspconfig')
+-- local navic = require('nvim-navic')
 local nvim_lsp_ts_utils = require('nvim-lsp-ts-utils')
 
 lspconfig.tsserver.setup({
   init_options = nvim_lsp_ts_utils.init_options,
   on_attach = function(client, bufnr)
+    -- navic.attach(client, bufnr)
+
     -- disable typescript formatting as we are using null-ls config
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
+    client.server_capabilities.document_formatting = false
+    client.server_capabilities.document_range_formatting = false
 
     nvim_lsp_ts_utils.setup({
       debug = false,
@@ -59,6 +62,8 @@ null_ls.setup({
     null_ls.builtins.formatting.prettierd,
   },
   on_attach = function()
-    vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()')
+    -- navic.attach(client, bufnr)
+
+    vim.cmd('autocmd BufWritePre <buffer> lua vim.lsp.buf.format()')
   end
 })

@@ -1,3 +1,11 @@
+-- local navic = require('nvim-navic')
+--
+-- require('lspconfig').clangd.setup {
+--   on_attach = function(client, bufnr)
+--     navic.attach(client, bufnr)
+--   end
+-- }
+
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
 local map_options = { silent = true, noremap = true }
@@ -15,6 +23,9 @@ vim.api.nvim_set_keymap(
 )
 vim.api.nvim_set_keymap(
   'n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', map_options
+)
+vim.api.nvim_set_keymap(
+  'n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', map_options
 )
 -- " nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 -- nnoremap <silent> <[-d> <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
