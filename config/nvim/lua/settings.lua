@@ -64,6 +64,6 @@ vim.opt.showbreak = 'i↪'
 
 -- make it obvious where 80 characters is
 vim.opt.textwidth = 80
-vim.opt.colorcolumn = '+1'
+-- vim.opt.colorcolumn = '+1'
 
 vim.opt.cmdheight = 0

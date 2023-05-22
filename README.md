@@ -20,50 +20,34 @@ Set zsh as your login shell:
 
     chsh -s $(which zsh)
 
-## Install
-
-Clone onto your laptop:
-
-    git clone git://github.com/thoughtbot/dotfiles.git ~/dotfiles
-
-(Or, [fork and keep your fork
-updated](http://robots.thoughtbot.com/keeping-a-github-fork-updated)).
+## Setup
 
 Install [rcm](https://github.com/thoughtbot/rcm):
 
+```bash
     brew tap thoughtbot/formulae
     brew install rcm
+```
 
-Install the dotfiles:
+Install the dotfiles for the first time:
 
+```bash
     env RCRC=$HOME/dotfiles/rcrc rcup
-
-After the initial installation, you can run `rcup` without the one-time variable
-`RCRC` being set (`rcup` will symlink the repo's `rcrc` to `~/.rcrc` for future
-runs of `rcup`). [See
-example](https://github.com/thoughtbot/dotfiles/blob/master/rcrc).
+```
 
 This command will create symlinks for config files in your home directory.
 Setting the `RCRC` environment variable tells `rcup` to use standard
-configuration options:
+configuration options during the first time setup.
 
-* Please configure the `rcrc` file if you'd like to make personal
-  overrides in a different directory
+Please configure the `rcrc` file if you'd like to make personal overrides in a
+different directory.
 
-## Update
+## Updating Dotfiles
 
-From time to time you should pull down any updates to these dotfiles, and run
+From time to time you should pull down any updates to your dotfiles by running
 
+```bash
     rcup
+```
 
-to link any new files and install new vim plugins. **Note** You _must_ run
-`rcup` after pulling to ensure that all files in plugins are properly installed,
-but you can safely run `rcup` multiple times so update early and update often!
-
-[tmux](http://robots.thoughtbot.com/a-tmux-crash-course)
-configuration:
-
-* Improve color resolution.
-* Remove administrative debris (session name, hostname, time) in status bar.
-* Set prefix to `Ctrl+s`
-* Soften status bar color from harsh green to light gray.
+You can safely run `rcup` multiple times!

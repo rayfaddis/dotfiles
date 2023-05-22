@@ -26,3 +26,5 @@ alias gfp="git fetch --prune" # alternaitve to oh-my-zsh gfa
 
 # Pretty print the path
 alias path='echo $PATH | tr -s ":" "\n"'
+
+alias tmux="tmux -2"

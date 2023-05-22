@@ -32,3 +32,13 @@ vim.api.nvim_set_keymap(
 -- nnoremap <silent> <]-d> <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 -- vim.api.nvim_command('buffer Formatting lua vim.lsp.buf.formatting()')
 -- vim.api.nvim_command('-buffer FormattingSync lua vim.lsp.buf.formatting_sync()')
+--
+
+local null_ls = require('null-ls')
+null_ls.builtins.code_actions.cspell.with({
+  config = {
+    find_json = function(cwd)
+      return vim.fn.expand(cwd .. "/cspell.json")
+    end
+  },
+})

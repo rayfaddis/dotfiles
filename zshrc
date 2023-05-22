@@ -22,14 +22,9 @@ antigen apply
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.aliases ] && source ~/.aliases
 
-. /usr/local/opt/asdf/libexec/asdf.sh
-
 export PATH=$HOME/.bin:$PATH # ensure dotfiles bin directory is loaded first
 export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/opt/redis@6.2/bin:$PATH"
-
 export ANDROID_SDK=$HOME/Library/Android/sdk
-
-unset ASDF_DIR

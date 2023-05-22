@@ -1,0 +1,77 @@
+#!/bin/sh
+
+reset -Q
+
+################################################################################
+# Homebrew requirements
+################################################################################
+HomebrewFormulas=(
+  "antigen"
+  "asdf"
+  "terraform-ls"
+  "lua-language-server"
+  "ncurses"
+  "neovim"
+  "tmux"
+  "reattach-to-user-namespace"
+  "tree-sitter"
+  "kitty"
+)
+for Formula in "${HomebrewFormulas[@]}"; do
+  if [ `which $Formula | grep -c "not found"` -eq 0 ]; then
+    brew install $Formula
+  else
+    brew upgrade $Formula
+  fi
+done
+
+HomebrewCasks=(
+  "font-jetbrains-mono-nerd-font"
+  "kitty"
+)
+for Cask in "${HomebrewCasks[@]}"; do
+  if [ `which $Cask | grep -c "not found"` -eq 0 ]; then
+    brew install --cask $Cask
+  else
+    brew upgrade --cask $Cask
+  fi
+done
+
+################################################################################
+# Tmux package manager
+################################################################################
+TPMPath="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPMPath" ]; then
+  echo "tpm not found. Installing..."
+  git clone https://github.com/tmux-plugins/tpm "$TPMPath"
+fi
+
+################################################################################
+# Global NPM packages
+################################################################################
+GlobalNodeModules=(
+  "npm"
+  "bash-language-server"
+  "cspell"
+  "prettierd"
+  "typescript"
+  "typescript-language-server"
+  "vscode-langservers-extracted"
+)
+for NodeModule in "${GlobalNodeModules[@]}"; do
+  if [ `npm list -g | grep -c $NodeModule` -eq 0 ]; then
+    npm install -g $NodeModule
+  fi
+done
+
+################################################################################
+# Ruby gems
+################################################################################
+Gems=(
+  "solargraph"
+)
+for Gem in "${Gems[@]}"; do
+  if [ `gem list $Gem | grep -c $Gem` -eq 0 ]; then
+    gem install $Gem
+  fi
+done
