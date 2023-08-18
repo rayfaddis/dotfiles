@@ -8,13 +8,13 @@ reset -Q
 HomebrewFormulas=(
   "antigen"
   "asdf"
-  "terraform-ls"
-  "lua-language-server"
+  # "terraform-ls"
+  # "lua-language-server"
   "ncurses"
   "neovim"
   "tmux"
   "reattach-to-user-namespace"
-  "tree-sitter"
+  # "tree-sitter"
 )
 for Formula in "${HomebrewFormulas[@]}"; do
   if [ `which $Formula | grep -c "not found"` -eq 0 ]; then
@@ -50,12 +50,12 @@ fi
 ################################################################################
 GlobalNodeModules=(
   "npm"
-  "bash-language-server"
-  "cspell"
-  "prettierd"
-  "typescript"
-  "typescript-language-server"
-  "vscode-langservers-extracted"
+  # "bash-language-server"
+  # "cspell"
+  # "prettierd"
+  # "typescript"
+  # "typescript-language-server"
+  # "vscode-langservers-extracted"
 )
 for NodeModule in "${GlobalNodeModules[@]}"; do
   if [ `npm list -g | grep -c $NodeModule` -eq 0 ]; then
@@ -67,7 +67,7 @@ done
 # Ruby gems
 ################################################################################
 Gems=(
-  "solargraph"
+  # "solargraph"
 )
 for Gem in "${Gems[@]}"; do
   if [ `gem list $Gem | grep -c $Gem` -eq 0 ]; then

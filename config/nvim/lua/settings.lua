@@ -1,9 +1,4 @@
-vim.g.mapleader = ' '
-
-vim.g.background = 'dark'
-vim.g.colors_name = 'onedarkpro'
--- vim.g.colors_name = 'onedark'
--- vim.g.colors_name = 'vscode'
+vim.g.mapleader = " "
 
 --
 -- NAVIGATION
@@ -23,10 +18,10 @@ vim.opt.shiftwidth = 2
 vim.opt.shiftround = true
 vim.opt.expandtab = true
 
--- -- code folding
+-- code folding
 -- https://github.com/nvim-treesitter/nvim-treesitter#folding
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevelstart = 99
 
 --
@@ -50,20 +45,20 @@ vim.opt.number = true
 vim.opt.numberwidth = 5
 
 -- show whitespace characters
-vim.opt.list = true
-vim.opt.listchars = {
-  tab = '▸\\',
-  nbsp = '␣',
-  lead = '·',
-  trail = '·',
-  extends = '→',
-  precedes = '←',
-  eol = '¬'
-}
-vim.opt.showbreak = 'i↪'
+-- vim.opt.list = true
+-- vim.opt.listchars = {
+--   tab = '▸\\',
+--   nbsp = '␣',
+--   lead = '·',
+--   trail = '·',
+--   extends = '→',
+--   precedes = '←',
+--   eol = '¬'
+-- }
+-- vim.opt.showbreak = 'i↪'
 
 -- make it obvious where 80 characters is
 vim.opt.textwidth = 80
--- vim.opt.colorcolumn = '+1'
+vim.opt.colorcolumn = "+1"
 
 vim.opt.cmdheight = 0
