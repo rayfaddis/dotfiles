@@ -1,7 +1,10 @@
 return {
   {
     "kyazdani42/nvim-tree.lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+      { "nvim-tree/nvim-web-devicons" }
+    },
+    event = "VimEnter",
     keys = {
       {
         "<leader>f",
@@ -14,6 +17,7 @@ return {
         desc = "Nvim Tree Toggle"
       },
     },
+    lazy = true,
     opts = {
       view = {
         width = 75,

@@ -1,11 +1,11 @@
 return {
   {
     "nvim-lualine/lualine.nvim",
+    event = "BufEnter",
+    lazy = true,
     opts = function()
-      function FileNameFormatter(str)
-        local filename = str;
-
-        if string.match(str, "NvimTree") then
+      function FileNameFormatter(filename)
+        if string.match(filename, "NvimTree") then
           filename = "File Explorer"
         end
 
@@ -14,39 +14,45 @@ return {
 
       local branch = {
         {
-          'branch',
+          "branch",
           icon = {
-            '',
+            "",
           },
         },
       }
 
       local diagnostics = {
-        'diagnostics',
+        "diagnostics",
+        -- cond = function()
+        --   if vim.bo.filetype == "NvimTree" then
+        --     print("test")
+        --     return false
+        --   end
+        -- end,
       }
 
       local diff = {
-        'diff',
+        "diff",
         symbols = {
-          added = ' ',
-          modified = ' ',
-          removed = ' ',
+          added = " ",
+          modified = " ",
+          removed = " ",
         },
       }
 
       local filename = {
-        'filename',
-        -- fmt = FileNameFormatter,
+        "filename",
+        fmt = FileNameFormatter,
         symbols = {
-          modified = '',
-          readonly = '',
-          unnamed = '',
-          newfile = '',
+          modified = "",
+          readonly = "",
+          unnamed = "",
+          newfile = "",
         },
       }
 
       local filetype = {
-        'filetype',
+        "filetype",
         colored = false,
         icon_only = true,
       }
@@ -57,31 +63,41 @@ return {
           filename,
         },
         lualine_b = {
-          -- { 'filetype' },
+          -- { "filetype" },
           diff,
         },
         lualine_y = {
-          diagnostics
+          diagnostics,
         }
       }
 
       return {
           options = {
-          -- component_separators = { left = '', right = '' },
-          disabled_filetypes = { winbar = { 'packer' } },
-          -- section_separators = { left = '', right = '' },
+          -- component_separators = { left = "", right = "" },
+          disabled_filetypes = { winbar = { "packer" } },
+          -- section_separators = { left = "", right = "" },
           globalstatus = true,
         },
         sections = {
-          lualine_a = { 'mode' },
+          lualine_a = { "mode" },
           lualine_b = branch,
           lualine_c = {
-            -- TableSpread(filetype, { filetype_names = { NvimTree = 'File Explorer' } }),
-            filename, { path = 1 },
+            {
+              -- TableSpread(filetype, { filetype_names = { NvimTree = "File Explorer" } }),
+              "filename",
+              fmt = function(string)
+                if string.match(string, "NvimTree") then
+                  string = ""
+                end
+
+                return string;
+              end,
+              { path = 1 },
+            },
           },
-          lualine_x = { 'lsp_progress' },
-          lualine_y = { 'searchcount' },
-        lualine_z = { 'location' }
+          lualine_x = { "lsp_progress" },
+          lualine_y = { "searchcount" },
+          lualine_z = { "location" },
         },
         winbar = shared_winbar,
         inactive_winbar = shared_winbar,

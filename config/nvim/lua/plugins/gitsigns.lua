@@ -1,36 +1,38 @@
 return {
   {
     "lewis6991/gitsigns.nvim",
-     opts = {
+    event = "BufEnter",
+    lazy = true,
+    opts = {
       signs = {
         add = {
           hl = "GitSignsAdd",
           text = "│",
           numhl = "GitSignsAddNr",
-          linehl = "GitSignsAddLn"
+          linehl = "GitSignsAddLn",
         },
         change = {
           hl = "GitSignsChange",
           text = "│", numhl = "GitSignsChangeNr",
-          linehl = "GitSignsChangeLn"
+          linehl = "GitSignsChangeLn",
         },
         delete = {
           hl = "GitSignsDelete",
           text = "_",
           numhl = "GitSignsDeleteNr",
-          linehl = 'GitSignsDeleteLn'
+          linehl = 'GitSignsDeleteLn',
         },
         topdelete = {
           hl = "GitSignsDelete",
           text = "‾",
           numhl = "GitSignsDeleteNr",
-          linehl = "GitSignsDeleteLn"
+          linehl = "GitSignsDeleteLn",
         },
         changedelete = {
           hl = "GitSignsChange",
           text = "~",
           numhl = "GitSignsChangeNr",
-          linehl = "GitSignsChangeLn"
+          linehl = "GitSignsChangeLn",
         },
       },
       signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
@@ -39,7 +41,7 @@ return {
       word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
       watch_gitdir = {
         interval = 1000,
-        follow_files = true
+        follow_files = true,
       },
       attach_to_untracked = true,
       current_line_blame = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
@@ -60,10 +62,10 @@ return {
         style = "minimal",
         relative = "cursor",
         row = 0,
-        col = 1
+        col = 1,
       },
       yadm = {
-        enable = false
+        enable = false,
       },
     },
   }

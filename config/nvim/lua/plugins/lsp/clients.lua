@@ -1,20 +1,38 @@
 return {
-  {
-    bashls = {
+  bashls = {},
+  eslint_d = {
+    auto_format = true,
+    null_ls_sources = {
+      code_actions = true,
+      diagnostics = true,
     },
-    eslint = {
-      format_on_save = true,
+  },
+  lua_ls = {
+    auto_format = true,
+    lspconfig_settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim", "KB", "TableClone", "TableContains", "TableSpread" },
+        },
+      },
+    }
+  },
+  prettierd = {
+    null_ls_sources = {
+      formatting = true,
     },
-    lua_ls = {
-      format_on_save = true,
+  },
+  rubocop = {
+    null_ls_sources = {
+      diagnostics = true,
+      formatting = true,
     },
-    solargraph = {
-      format_on_save = true,
-    },
-    terraformls = {
-      format_on_save = true,
-    },
-    tsserver = {
-    },
-  }
+  },
+  solargraph = {
+    auto_format = true,
+  },
+  terraformls = {
+    auto_format = true,
+  },
+  tsserver = {},
 }

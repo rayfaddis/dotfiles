@@ -45,17 +45,17 @@ vim.opt.number = true
 vim.opt.numberwidth = 5
 
 -- show whitespace characters
--- vim.opt.list = true
--- vim.opt.listchars = {
---   tab = '▸\\',
---   nbsp = '␣',
---   lead = '·',
---   trail = '·',
---   extends = '→',
---   precedes = '←',
---   eol = '¬'
--- }
--- vim.opt.showbreak = 'i↪'
+vim.opt.list = true
+vim.opt.listchars = {
+  tab = '▸\\',
+  nbsp = '␣',
+  lead = '·',
+  trail = '·',
+  extends = '→',
+  precedes = '←',
+  eol = '¬'
+}
+vim.opt.showbreak = 'i↪'
 
 -- make it obvious where 80 characters is
 vim.opt.textwidth = 80

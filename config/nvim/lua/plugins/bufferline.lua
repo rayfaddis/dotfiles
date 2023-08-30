@@ -1,6 +1,7 @@
 return {
   {
     "akinsho/bufferline.nvim",
+    event = "BufEnter",
     keys = {
       {
         "<leader>1",
@@ -53,19 +54,20 @@ return {
         desc = "Bufferline Go To Tab 10",
       },
     },
+    lazy = true,
     opts = {
       options = {
-        diagnostics = 'nvim_lsp',
-        mode = 'tabs',
-        numbers = 'ordinal',
+        diagnostics = "nvim_lsp",
+        mode = "tabs",
+        numbers = "ordinal",
         offsets = {
           {
-            filetype = 'NvimTree',
+            filetype = "NvimTree",
             text = function()
               return vim.fn.getcwd()
             end,
-            highlight = 'Directory',
-            text_align = 'left'
+            highlight = "Directory",
+            text_align = "left",
           }
         },
         show_buffer_close_icons = false,
