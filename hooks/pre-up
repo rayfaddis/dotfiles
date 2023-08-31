@@ -8,8 +8,6 @@ reset -Q
 HomebrewFormulas=(
   "antigen"
   "asdf"
-  # "terraform-ls"
-  # "lua-language-server"
   "ncurses"
   "neovim"
   "tmux"
