@@ -3,8 +3,25 @@
 reset -Q
 
 ################################################################################
+# Tmux package manager
+################################################################################
+TPMPath="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPMPath" ]; then
+  echo "tpm not found. Installing..."
+  git clone https://github.com/tmux-plugins/tpm "$TPMPath"
+fi
+
+################################################################################
 # Homebrew requirements
 ################################################################################
+HomebrewTaps=(
+ "homebrew/cask-fonts"
+)
+
+for Tap in "${HomebrewTaps[@]}"; do
+  brew tap $Tap
+done
+
 HomebrewFormulas=(
   "antigen"
   "asdf"
@@ -33,15 +50,6 @@ for Cask in "${HomebrewCasks[@]}"; do
     brew upgrade --cask $Cask
   fi
 done
-
-################################################################################
-# Tmux package manager
-################################################################################
-TPMPath="$HOME/.tmux/plugins/tpm"
-if [ ! -d "$TPMPath" ]; then
-  echo "tpm not found. Installing..."
-  git clone https://github.com/tmux-plugins/tpm "$TPMPath"
-fi
 
 ################################################################################
 # Global NPM packages
