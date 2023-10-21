@@ -28,7 +28,7 @@ tic -xe tmux-256color ~/tmux-256color.info
 ################################################################################
 # Replace app icons
 ################################################################################
-for icon in ~/.icons/*/*.icns
+for icon in $HOME/dotfiles/icons/*/*.icns
 do
   directory_path=$(dirname "$icon")
   app_name=$(basename "$directory_path")
