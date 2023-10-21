@@ -40,15 +40,17 @@ return {
         },
       }
 
+      local filename_symbols = {
+        modified = "",
+        readonly = "",
+        unnamed = "",
+        newfile = "",
+      }
+
       local filename = {
         "filename",
         fmt = FileNameFormatter,
-        symbols = {
-          modified = "",
-          readonly = "",
-          unnamed = "",
-          newfile = "",
-        },
+        symbols = filename_symbols,
       }
 
       local filetype = {
@@ -92,7 +94,8 @@ return {
 
                 return string;
               end,
-              { path = 1 },
+              path = 1,
+              symbols = filename_symbols,
             },
           },
           lualine_x = { "lsp_progress" },
