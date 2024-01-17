@@ -1,3 +1,4 @@
+-- incremental text selection within blocks using CR
 return {
   {
     "sustech-data/wildfire.nvim",

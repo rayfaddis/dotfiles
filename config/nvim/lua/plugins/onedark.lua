@@ -1,3 +1,4 @@
+-- onedark theme
 return {
   {
     "navarasu/onedark.nvim",

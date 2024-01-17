@@ -22,13 +22,18 @@ antigen apply
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.aliases ] && source ~/.aliases
 
-export PATH=$HOME/.bin:$PATH # ensure dotfiles bin directory is loaded first
-export PATH=$HOME/.asdf/shims:$PATH
-export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
-export PATH="/usr/local/opt/libpq/bin:$PATH"
+# ensure dotfiles bin directory is loaded first
+export PATH=$HOME/.bin:$PATH 
+
+export PATH=$HOME/bin:$PATH
 export PATH="/usr/local/sbin:$PATH"
-export PATH="/usr/local/opt/redis@6.2/bin:$PATH"
+
+export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
 export ANDROID_SDK=$HOME/Library/Android/sdk
+
+export PATH=$HOME/.asdf/shims:$PATH
+export PATH="/usr/local/opt/libpq/bin:$PATH"
+export PATH="/usr/local/opt/redis@6.2/bin:$PATH"
 
 . ~/.asdf/plugins/java/set-java-home.zsh
 

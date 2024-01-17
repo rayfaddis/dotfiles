@@ -1,3 +1,4 @@
+-- manage LSP servers
 return {
   {
     "williamboman/mason.nvim",

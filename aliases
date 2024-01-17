@@ -28,3 +28,4 @@ alias gfp="git fetch --prune" # alternaitve to oh-my-zsh gfa
 alias path='echo $PATH | tr -s ":" "\n"'
 
 alias tmux="tmux -2"
+alias gangway="~/Projects/buoy/Gangway/gangway.py"

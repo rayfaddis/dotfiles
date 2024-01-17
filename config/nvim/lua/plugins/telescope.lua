@@ -1,3 +1,4 @@
+-- fuzzy finder for many things (files, file contents, git, etc)
 return {
   {
     "nvim-telescope/telescope.nvim",

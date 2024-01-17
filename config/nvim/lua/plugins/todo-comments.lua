@@ -1,3 +1,4 @@
+-- highlight, list and search TODO like comments (HACK, BUG, NOTE, etc)
 return {
   {
     "folke/todo-comments.nvim",

@@ -1,3 +1,4 @@
+-- split/join blocks of code (arrays, hashes, statements, objects, etc)
 return {
   {
     "wansmer/treesj",

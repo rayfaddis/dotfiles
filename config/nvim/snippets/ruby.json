@@ -1,0 +1,49 @@
+{
+  "Log to Rails Log": {
+    "prefix": "log",
+    "body": [
+      "Rails.logger.info(\"*** ${1:label} #{${1:variable}}\")"
+    ],
+    "description": "Log variable to Rails log"
+  },
+
+  "Output a variable": {
+    "prefix": "puts",
+    "body": [
+      "puts(\"*** ${1:label} #{${1:variable}}\")"
+    ],
+    "description": "Output variable to console"
+  },
+
+  "Pry": {
+    "prefix": "pry",
+    "body": [
+      "binding.pry"
+    ],
+    "description": "Insert Pry binding"
+  },
+
+  "Let - Inline Block": {
+    "prefix": "letib",
+    "body": [
+      "let(:$1) { $2 }"
+    ],
+    "description": "Rspec let with inline block"
+  },
+
+  "Let - Do Block": {
+    "prefix": "letdb",
+    "body": [
+      "let(:$1) do\n\t$2\nend"
+    ],
+    "description": "Rspec let with do block"
+  },
+
+  "Its Expected To": {
+    "prefix": "itexpectib",
+    "body": [
+      "it { is_expected.to $1 }"
+    ],
+    "description": "It' expected to equal as inline block"
+  }
+}

@@ -1,3 +1,4 @@
+-- execute various tests for the current file or test file
 return {
   "klen/nvim-test",
   event = "BufEnter",

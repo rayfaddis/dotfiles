@@ -1,3 +1,4 @@
+-- diagnostics/references/quickfix split pane
 return {
   {
     "folke/trouble.nvim",

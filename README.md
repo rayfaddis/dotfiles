@@ -2,16 +2,7 @@
 
 ## TODO
 
-- [x] Install NVIM Markdown previewer
-- [x] Move NVIM config to lua script from vimscript
-- [x] Move NVIM from vimplug to packer
-- [x] Move entirely from dotfile-local to just dotfiles
 - [ ] Look into using Nest for keymaps
-- [ ] Clean up NVIM configs
-- [ ] Test Brewfile
-- [ ] Execute Brewfile on rcup
-- [ ] Update Brewfile for Mac Apps
-- [ ] Cleanup README
 - [ ] Remove all VIM config and install
 
 ## Requirements
