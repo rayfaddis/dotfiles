@@ -25,6 +25,7 @@ done
 HomebrewFormulas=(
   "antigen"
   "asdf"
+  "golangci-lint"
   "ncurses"
   "neovim"
   "tmux"

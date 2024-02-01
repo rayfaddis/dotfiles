@@ -9,10 +9,13 @@ return {
         vim.lsp.protocol.make_client_capabilities()
       )
       local on_attach = function(client, _)
-        print("client " .. client)
-        -- if clients[client].format_on_save then
-        --   vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
-        -- end
+        local format_msg = "    Autoformat: "
+        if clients[client].auto_format then
+          print(format_msg .. "true")
+          vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+        else
+          print(format_msg .. "false")
+        end
       end
 
       -- Use LspAttach autocommand to only map the following keys
@@ -32,7 +35,7 @@ return {
             vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
             vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
             vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-            vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
+            -- vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, opts)
             vim.keymap.set(
               "n", "<space>wa", vim.lsp.buf.add_workspace_folder, opts
             )
@@ -65,20 +68,29 @@ return {
         }
       )
 
+      print("LSP Configuration:")
       for client, config in pairs(clients) do
         if not config.null_ls_sources then
+          local setup = config.lspconfig_setup
+
+          local config_msg = (setup and "true") or "false"
+          print("  Client: " .. client)
+          print("    Config: " .. config_msg)
+
           lspconfig[client].setup({
             capabilities = capabilities,
-            on_attach = on_attach,
-            settings = config.lspconfig_settings,
+            cmd = setup and setup.cmd,
+            filetypes = setup and setup.filetypes,
+            init_options = setup and setup.init_options,
+            on_attach = on_attach(client),
+            root_dir = setup and setup.root_dir,
+            settings = setup and setup.settings,
           })
         end
       end
     end,
     dependencies = {
-      {
-        "hrsh7th/nvim-cmp",
-      },
+      "hrsh7th/nvim-cmp",
     },
     event = "BufEnter",
     keys = {

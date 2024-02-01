@@ -63,10 +63,10 @@ return {
           --   key = "a",
           -- },
           {
-            action = "Telescope dotfiles",
-            desc = " dotfiles",
+            action = "SessionManager load_session",
+            desc = " Sessions",
             group = "Number",
-            key = "d",
+            key = "s",
           },
         },
         week_header = {

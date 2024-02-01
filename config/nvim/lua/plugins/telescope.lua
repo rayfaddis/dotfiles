@@ -7,10 +7,15 @@ return {
         "nvim-telescope/telescope-fzf-native.nvim",
         build = "make",
       },
+      {
+        "nvim-telescope/telescope-ui-select.nvim",
+      },
     },
     event = "VimEnter",
     init = function()
-      require('telescope').load_extension('fzf')
+      local telescope = require("telescope")
+      telescope.load_extension("fzf")
+      telescope.load_extension("ui-select")
     end,
     keys = {
       {
@@ -36,36 +41,37 @@ return {
       },
       defaults = {
         vimgrep_arguments = {
-          'rg',
-          '--color=never',
-          '--no-heading',
-          '--with-filename',
-          '--line-number',
-          '--column',
-          '--smart-case',
-          '-u',
-          '-u',
+          "rg",
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+          "--smart-case",
+          "-u",
+          "-u",
 
-          '--iglob', '!.git',
-          '--iglob', '!node_modules',
-          '--iglob', '!public',
-          '--iglob', '!tmp',
-          '--iglob', '!storage',
+          "--iglob", "!.git",
+          "--iglob", "!node_modules",
+          "--iglob", "!public",
+          "--iglob", "!tmp",
+          "--iglob", "!storage",
         },
       },
       pickers = {
         find_files = {
           find_command = {
-            'rg',
-            '-u',
+            "rg",
+            "--smart-case",
+            "-u",
 
-            '--files',
-            '--iglob', '!.git',
-            '--iglob', '!node_modules',
-            '--iglob', '!public',
-            '--iglob', '!tmp',
-            '--iglob', '!storage',
-            '--hidden',
+            "--files",
+            "--iglob", "!.git",
+            "--iglob", "!node_modules",
+            "--iglob", "!public",
+            "--iglob", "!tmp",
+            "--iglob", "!storage",
+            "--hidden",
           },
           path_display = { "truncate" },
         },
