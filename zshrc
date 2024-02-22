@@ -1,4 +1,4 @@
-source /usr/local/share/antigen/antigen.zsh
+source /opt/homebrew/share/antigen/antigen.zsh
 
 antigen use oh-my-zsh
 
@@ -24,7 +24,6 @@ antigen apply
 
 # ensure dotfiles bin directory is loaded first
 export PATH=$HOME/.bin:$PATH 
-
 export PATH=$HOME/bin:$PATH
 export PATH="/usr/local/sbin:$PATH"
 
@@ -32,9 +31,8 @@ export PATH=$HOME/Library/Android/sdk/platform-tools:$PATH
 export ANDROID_SDK=$HOME/Library/Android/sdk
 
 export PATH=$HOME/.asdf/shims:$PATH
+# export PATH="/opt/homebrew/opt/ncurses/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export PATH="/usr/local/opt/redis@6.2/bin:$PATH"
-
-. ~/.asdf/plugins/java/set-java-home.zsh
 
 unset ASDF_DIR

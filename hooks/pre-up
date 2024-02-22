@@ -7,8 +7,10 @@ reset -Q
 ################################################################################
 TPMPath="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$TPMPath" ]; then
-  echo "tpm not found. Installing..."
+  echo "TPM not found. Installing..."
   git clone https://github.com/tmux-plugins/tpm "$TPMPath"
+else
+  echo "TPM is already installed."
 fi
 
 ################################################################################
@@ -30,7 +32,6 @@ HomebrewFormulas=(
   "neovim"
   "tmux"
   "reattach-to-user-namespace"
-  # "tree-sitter"
 )
 for Formula in "${HomebrewFormulas[@]}"; do
   if [ `which $Formula | grep -c "not found"` -eq 0 ]; then
@@ -53,13 +54,22 @@ for Cask in "${HomebrewCasks[@]}"; do
 done
 
 ################################################################################
+# Install ASDF plugins and tool versions
+################################################################################
+echo "Add ASDF plugins and install tool versions"
+asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
+asdf plugin-add java https://github.com/halcyon/asdf-java.git
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
+asdf plugin-add python
+asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
+asdf install
+
+################################################################################
 # Global NPM packages
 ################################################################################
 GlobalNodeModules=(
   "npm"
   # "bash-language-server"
-  # "cspell"
-  # "prettierd"
   # "typescript"
   # "typescript-language-server"
   # "vscode-langservers-extracted"

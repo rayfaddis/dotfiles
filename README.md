@@ -1,44 +1,46 @@
 # dotfiles
 
-## TODO
-
-- [ ] Look into using Nest for keymaps
-- [ ] Remove all VIM config and install
-
 ## Requirements
 
-Set zsh as your login shell:
-
-    chsh -s $(which zsh)
+[Homebrew](https://brew.sh/)
 
 ## Setup
 
-Install [rcm](https://github.com/thoughtbot/rcm):
+1. Clone this repo into $HOME/dotfiles
+
+2. Install [rcm](https://github.com/thoughtbot/rcm):
 
 ```bash
-    brew tap thoughtbot/formulae
-    brew install rcm
+  brew tap thoughtbot/formulae
+  brew install rcm
 ```
 
-Install the dotfiles for the first time:
+3. Install the dotfiles for the first time:
 
 ```bash
-    env RCRC=$HOME/dotfiles/rcrc rcup
+  env RCRC=$HOME/dotfiles/rcrc rcup
 ```
 
 This command will create symlinks for config files in your home directory.
 Setting the `RCRC` environment variable tells `rcup` to use standard
-configuration options during the first time setup.
+configuration options during the first time setup and is not needed after the
+first run.
 
 Please configure the `rcrc` file if you'd like to make personal overrides in a
 different directory.
+
+4. Source your bash
+
+```
+  src
+```
 
 ## Updating Dotfiles
 
 From time to time you should pull down any updates to your dotfiles by running
 
 ```bash
-    rcup
+  rcup
 ```
 
 You can safely run `rcup` multiple times!
