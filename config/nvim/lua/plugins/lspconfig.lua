@@ -11,10 +11,10 @@ return {
       local on_attach = function(client, _)
         local format_msg = "    Autoformat: "
         if clients[client].auto_format then
-          print(format_msg .. "true")
+          -- print(format_msg .. "true")
           vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
         else
-          print(format_msg .. "false")
+          -- print(format_msg .. "false")
         end
       end
 
@@ -68,14 +68,14 @@ return {
         }
       )
 
-      print("LSP Configuration:")
+      -- print("LSP Configuration:")
       for client, config in pairs(clients) do
         if not config.null_ls_sources then
           local setup = config.lspconfig_setup
 
           local config_msg = (setup and "true") or "false"
-          print("  Client: " .. client)
-          print("    Config: " .. config_msg)
+          -- print("  Client: " .. client)
+          -- print("    Config: " .. config_msg)
 
           lspconfig[client].setup({
             capabilities = capabilities,

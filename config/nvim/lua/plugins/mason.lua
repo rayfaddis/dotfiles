@@ -27,9 +27,9 @@ return {
         end
       end
 
-      print("Mason Installs:")
-      print("  LSP Clients: " .. table.concat(lsp_clients, ", "))
-      print("  Null-ls Clients: " .. table.concat(null_ls_clients, ", "))
+      -- print("Mason Installs:")
+      -- print("  LSP Clients: " .. table.concat(lsp_clients, ", "))
+      -- print("  Null-ls Clients: " .. table.concat(null_ls_clients, ", "))
 
       require("mason-lspconfig").setup({ ensure_installed = lsp_clients })
       require("mason-null-ls").setup({ ensure_installed = null_ls_clients })

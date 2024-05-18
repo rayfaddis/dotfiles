@@ -62,3 +62,5 @@ vim.opt.textwidth = 80
 vim.opt.colorcolumn = "+1"
 
 vim.opt.cmdheight = 0
+vim.opt.iskeyword:append("-")
+vim.opt.iskeyword:append("_")

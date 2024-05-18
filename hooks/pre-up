@@ -32,6 +32,7 @@ HomebrewFormulas=(
   "neovim"
   "tmux"
   "reattach-to-user-namespace"
+  "ripgrep"
 )
 for Formula in "${HomebrewFormulas[@]}"; do
   if [ `which $Formula | grep -c "not found"` -eq 0 ]; then
