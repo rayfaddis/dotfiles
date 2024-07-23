@@ -17,12 +17,17 @@ vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.shiftround = true
 vim.opt.expandtab = true
+vim.opt.autoindent = true
 
 -- code folding
 -- https://github.com/nvim-treesitter/nvim-treesitter#folding
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevelstart = 99
+
+-- searching
+vim.opt.ignorecase = true
+vim.opt.smartcase = true -- if you include mixed case in your search, assumes you want case-sensitive
 
 --
 -- STYLING
@@ -42,7 +47,9 @@ vim.opt.termguicolors = true
 
 -- display line numbers
 vim.opt.number = true
-vim.opt.numberwidth = 5
+vim.opt.relativenumber = true
+vim.opt.statuscolumn = "%s%l %r "
+-- vim.opt.numberwidth = 5
 
 -- show whitespace characters
 vim.opt.list = true

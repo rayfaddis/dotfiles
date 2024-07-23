@@ -1,0 +1,25 @@
+# Log variable to the Rails log
+snippet log
+  Rails.logger.info("*** ${1:label} #{${1:variable}}")
+
+# Output variable to the console
+snippet puts
+  puts("*** ${1:label} #{${1:variable}}")
+
+# Insert Pry binding
+snippet pry
+  binding.pry
+
+# Rspec let with inline block
+snippet letib
+  let(:$1) { $2 }
+
+# Rspec let with do block
+snippet letdb
+  let(:$1) do
+    $2
+  end
+
+# It' expected to equal as inline block
+snippet itexpectib
+  it { is_expected.to $1 }

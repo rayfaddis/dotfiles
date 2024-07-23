@@ -10,24 +10,25 @@ return {
 
       local cmp = require("cmp")
       local snippy = require("snippy")
+      local lspkind = require("lspkind")
 
       cmp.setup({
+        completion = {
+          completeopt = "menu,menuone,preview,noselect",
+        },
         snippet = {
           expand = function(args)
             snippy.expand_snippet(args.body)
           end,
         },
-        mapping = {
-          ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-          ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-          ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-          ["<C-y>"] = cmp.config.disable, -- If you want to remove the default `<C-y>` mapping, You can specify `cmp.config.disable` value.
-          ["<C-e>"] = cmp.mapping({
-            i = cmp.mapping.abort(),
-            c = cmp.mapping.close(),
-          }),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
-
+        mapping = cmp.mapping.preset.insert({
+          -- ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
+          -- ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
+          ["<C-e>"] = cmp.mapping.abort(), -- close completion window
+          ["<CR>"] = cmp.mapping.confirm({ select = false }),
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
@@ -38,8 +39,7 @@ return {
             else
               fallback()
             end
-          end, { "i", "s" }),
-
+          end),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
@@ -48,14 +48,22 @@ return {
             else
               fallback()
             end
-          end, { "i", "s" }),
-        },
+          end),
+        }),
+        -- sources for autocompletion
         sources = cmp.config.sources({
+          { name = "buffer" }, -- text within current buffer
           { name = "nvim_lsp" },
-          { name = "snippy" },
-        }, {
-          { name = "buffer" },
-        })
+          { name = "path" }, -- file system paths
+          { name = "snippy" }, -- snippets
+        }),
+        -- configure lspkind for vs-code like pictograms in completion menu
+        formatting = {
+          format = lspkind.cmp_format({
+            maxwidth = 50,
+            ellipsis_char = "...",
+          }),
+        },
       })
 
       -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -70,9 +78,8 @@ return {
       cmp.setup.cmdline(':', {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-          { name = "path" }
-        }, {
-          { name = "cmdline" }
+          { name = "path" },
+          { name = "cmdline" },
         })
       })
     end,
@@ -81,25 +88,25 @@ return {
         "hrsh7th/cmp-buffer",
       },
       {
-        "hrsh7th/cmp-cmdline",
-      },
-      {
         "hrsh7th/cmp-nvim-lsp",
       },
       {
         "hrsh7th/cmp-path",
       },
       {
-        "dcampos/nvim-snippy",
-        config = function()
-          vim.opt.runtimepath:append(",~/.config/nvim/snippets")
-        end,
+        "hrsh7th/cmp-cmdline",
       },
       {
         "dcampos/cmp-snippy",
       },
+      {
+        "dcampos/nvim-snippy",
+      },
+      {
+        "onsails/lspkind.nvim",
+      },
     },
-    event = { "InsertEnter", "CmdlineEnter" },
+    event = { "InsertEnter", "CmdlineEnter" }, -- TODO: ignore Dashboard
     lazy = true,
     opts = {},
   },

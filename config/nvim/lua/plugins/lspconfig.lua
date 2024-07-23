@@ -12,7 +12,8 @@ return {
         local format_msg = "    Autoformat: "
         if clients[client].auto_format then
           -- print(format_msg .. "true")
-          vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+          -- vim.cmd([[autocmd BufWritePre <buffer> lua vim.lsp.buf.format()]])
+          vim.lsp.buf.formatting_sync()
         else
           -- print(format_msg .. "false")
         end

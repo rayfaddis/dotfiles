@@ -1,18 +1,18 @@
 -- nvim-lspconfig supported list https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md
 return {
   bashls = {},
-  cspell = {
-    null_ls_sources = {
-      code_actions = true,
-      diagnostics = true,
-    },
-  },
-  eslint_d = {
+  -- cspell = {
+    -- null_ls_sources = {
+    --   code_actions = true,
+    --   diagnostics = true,
+    -- },
+  -- },
+  eslint = {
     auto_format = true,
-    null_ls_sources = {
-      code_actions = true,
-      diagnostics = true,
-    },
+    -- null_ls_sources = {
+    --   code_actions = true,
+    --   diagnostics = true,
+    -- },
   },
   golangci_lint_ls = {},
   lua_ls = {
