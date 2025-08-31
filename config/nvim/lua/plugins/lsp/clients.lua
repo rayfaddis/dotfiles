@@ -61,5 +61,5 @@ return {
   terraformls = {
     auto_format = true,
   },
-  tsserver = {},
+  ts_ls = {},
 }

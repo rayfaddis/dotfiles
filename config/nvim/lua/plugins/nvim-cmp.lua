@@ -16,14 +16,39 @@ return {
         completion = {
           completeopt = "menu,menuone,preview,noselect",
         },
-        snippet = {
-          expand = function(args)
-            snippy.expand_snippet(args.body)
-          end,
+        -- experimental = {
+        --   ghost_text = false -- this feature conflict with copilot.vim's preview.
+        -- },
+        -- configure lspkind for vs-code like pictograms in completion menu
+        formatting = {
+          format = lspkind.cmp_format({
+            maxwidth = 50,
+            ellipsis_char = "...",
+          }),
         },
         mapping = cmp.mapping.preset.insert({
           -- ["<C-k>"] = cmp.mapping.select_prev_item(), -- previous suggestion
           -- ["<C-j>"] = cmp.mapping.select_next_item(), -- next suggestion
+          -- ['<C-o>'] = cmp.mapping(function(fallback)
+          --   local fallback_key = vim.api.nvim_replace_termcodes('<Tab>', true, true, true)
+          --   local resolved_key = vim.fn['copilot#Accept'](fallback)
+          --   if fallback_key == resolved_key then
+          --     cmp.confirm({ select = true })
+          --   else
+          --     vim.api.nvim_feedkeys(resolved_key, 'n', true)
+          --   end
+          -- end),
+          -- ["<C-g>"] = cmp.mapping(function()
+          --   vim.api.nvim_feedkeys(
+          --     vim.fn["copilot#Accept"](
+          --       vim.api.nvim_replace_termcodes(
+          --         "<Tab>", true, true, true
+          --       )
+          --     ),
+          --     "n",
+          --     true
+          --   )
+          -- end),
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
           ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
@@ -50,20 +75,19 @@ return {
             end
           end),
         }),
+        snippet = {
+          expand = function(args)
+            snippy.expand_snippet(args.body)
+          end,
+        },
         -- sources for autocompletion
         sources = cmp.config.sources({
-          { name = "buffer" }, -- text within current buffer
-          { name = "nvim_lsp" },
-          { name = "path" }, -- file system paths
-          { name = "snippy" }, -- snippets
+          { name = "buffer", group_index = 2  }, -- text within current buffer
+          { name = "copilot", group_index = 2 },
+          { name = "nvim_lsp", group_index = 2 },
+          { name = "path", group_index = 2 }, -- file system paths
+          { name = "snippy", group_index = 2 }, -- snippets
         }),
-        -- configure lspkind for vs-code like pictograms in completion menu
-        formatting = {
-          format = lspkind.cmp_format({
-            maxwidth = 50,
-            ellipsis_char = "...",
-          }),
-        },
       })
 
       -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
@@ -98,6 +122,12 @@ return {
       },
       {
         "dcampos/cmp-snippy",
+      },
+      {
+        "zbirenbaum/copilot-cmp",
+        config = function ()
+          require("copilot_cmp").setup()
+        end,
       },
       {
         "dcampos/nvim-snippy",

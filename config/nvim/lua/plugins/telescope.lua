@@ -56,6 +56,7 @@ return {
           "--iglob", "!public",
           "--iglob", "!tmp",
           "--iglob", "!storage",
+          "--iglob", "!log",
         },
       },
       pickers = {
