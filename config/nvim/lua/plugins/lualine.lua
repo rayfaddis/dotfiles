@@ -2,11 +2,6 @@
 return {
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = {
-      {
-        "AndreM222/copilot-lualine",
-      },
-    },
     event = "BufEnter",
     lazy = true,
     opts = function()
@@ -104,7 +99,7 @@ return {
               symbols = filename_symbols,
             },
           },
-          lualine_x = { "copilot", "lsp_progress" },
+          lualine_x = { "lsp_status" },
           lualine_y = { "searchcount" },
           lualine_z = { "location" },
         },

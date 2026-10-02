@@ -1,5 +1,4 @@
 require("disable-builtins")
-require("utilities")
 require("options")
 require("keymaps")
 

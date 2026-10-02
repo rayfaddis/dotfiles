@@ -20,9 +20,8 @@ vim.opt.expandtab = true
 vim.opt.autoindent = true
 
 -- code folding
--- https://github.com/nvim-treesitter/nvim-treesitter#folding
 vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevelstart = 99
 
 -- searching
