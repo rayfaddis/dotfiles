@@ -28,31 +28,6 @@ echo "Set 256 colors and italics"
 tic -xe tmux-256color ~/tmux-256color.info
 
 ################################################################################
-# Replace app icons
-################################################################################
-echo "Replace icons"
-for icon in $HOME/dotfiles/icons/*/*.icns
-do
-  directory_path=$(dirname "$icon")
-  app_name=$(basename "$directory_path")
-  filename=$(basename "$icon")
-
-  destination_app="/Applications/$app_name.app"
-  destination_icon="$destination_app/Contents/Resources/$filename"
-
-  if [[ -f "$destination_icon" ]]; then
-    echo "Replacing icon for $app_name"
-    cp "$icon" "$destination_icon"
-    touch "$destination_app"
-  else
-    echo "Could not find icon for $app_name"
-  fi
-done
-
-echo "Restart Finder and Dock"
-killall Finder && killall Dock
-
-################################################################################
 # Reload zshrc
 ################################################################################
 exec zsh

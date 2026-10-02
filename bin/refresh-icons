@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# Apply custom icons from ~/dotfiles/icons/<App Name>/*.icns to
+# /Applications/<App Name>.app. Skips apps that already have a custom icon, so
+# it is cheap to run often. App updates replace the bundle and drop the icon;
+# the refresh-icons LaunchAgent reruns this when /Applications changes.
+
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+icons_dir="$HOME/dotfiles/icons"
+changed=0
+
+if ! command -v fileicon >/dev/null; then
+  echo "fileicon not found. Install with: brew install fileicon" >&2
+  exit 1
+fi
+
+for icon in "$icons_dir"/*/*.icns; do
+  app_name=$(basename "$(dirname "$icon")")
+  app="/Applications/$app_name.app"
+
+  [ -d "$app" ] || continue
+  fileicon test "$app" >/dev/null 2>&1 && continue
+
+  if fileicon -q set "$app" "$icon"; then
+    echo "$(date '+%F %T') Set icon for $app_name"
+    changed=1
+  else
+    echo "$(date '+%F %T') Failed to set icon for $app_name" >&2
+  fi
+done
+
+if [ "$changed" -eq 1 ]; then
+  killall Dock
+fi

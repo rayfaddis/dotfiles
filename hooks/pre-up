@@ -26,6 +26,7 @@ done
 
 HomebrewFormulas=(
   "antigen"
+  "fileicon"
   "golangci-lint"
   "mise"
   "ncurses"
@@ -52,6 +53,17 @@ for Cask in "${HomebrewCasks[@]}"; do
   else
     brew upgrade --cask $Cask
   fi
+done
+
+################################################################################
+# LaunchAgents
+################################################################################
+for Plist in "$HOME"/dotfiles/launchd/*.plist; do
+  Label=$(basename "$Plist" .plist)
+  echo "Loading LaunchAgent $Label"
+  cp "$Plist" "$HOME/Library/LaunchAgents/"
+  launchctl bootout "gui/$(id -u)/$Label" 2>/dev/null
+  launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$Label.plist"
 done
 
 ################################################################################
