@@ -10,7 +10,6 @@ ohmyzsh/ohmyzsh path:plugins/command-not-found
 ohmyzsh/ohmyzsh path:plugins/docker-compose
 ohmyzsh/ohmyzsh path:plugins/gem
 ohmyzsh/ohmyzsh path:plugins/git
-ohmyzsh/ohmyzsh path:plugins/heroku
 # ohmyzsh/ohmyzsh path:plugins/history
 ohmyzsh/ohmyzsh path:plugins/mise
 ohmyzsh/ohmyzsh path:plugins/node
@@ -23,6 +22,9 @@ ohmyzsh/ohmyzsh path:plugins/ssh
 ohmyzsh/ohmyzsh path:plugins/tmux
 ohmyzsh/ohmyzsh path:plugins/vi-mode
 # ohmyzsh/ohmyzsh path:plugins/zsh_reload
+# Keep after the other plugins: the Heroku CLI setup it sources runs compinit
+# immediately, so plugins after it wouldn't have their completions on fpath.
+ohmyzsh/ohmyzsh path:plugins/heroku
 aubreypwd/zsh-plugin-reload
 
 zsh-users/zsh-autosuggestions
