@@ -1,4 +1,4 @@
-brew "antigen"
+brew "antidote"
 brew "fileicon"
 brew "golangci-lint"
 brew "mise"

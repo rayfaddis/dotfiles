@@ -36,11 +36,6 @@ echo "Installing tool versions with mise"
 mise install
 
 ################################################################################
-# oh-my-zsh completions cache (antigen doesn't create it; the mise plugin needs it)
-################################################################################
-mkdir -p "$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions"
-
-################################################################################
 # Global NPM packages
 ################################################################################
 GlobalNodeModules=(

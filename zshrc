@@ -1,37 +1,7 @@
-source /opt/homebrew/share/antigen/antigen.zsh
-
-antigen use oh-my-zsh
-
-antigen bundle 1password
-antigen bundle aws
-antigen bundle bundler
-antigen bundle colorize
-antigen bundle command-not-found
-# antigen bundle docker
-antigen bundle docker-compose
-antigen bundle gem
-antigen bundle git
-antigen bundle heroku
-# antigen bundle history
-antigen bundle mise
-antigen bundle node
-antigen bundle npm
-antigen bundle pip
-antigen bundle rails
-antigen bundle rsync
-antigen bundle ruby
-antigen bundle ssh
-antigen bundle tmux
-antigen bundle vi-mode
-# antigen bundle zsh_reload
-antigen bundle aubreypwd/zsh-plugin-reload
-
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-syntax-highlighting
-
-antigen theme half-life
-
-antigen apply
+# Plugins are listed in ~/.zsh_plugins.txt
+ZSH_THEME=half-life
+source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+antidote load
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.aliases ] && source ~/.aliases
