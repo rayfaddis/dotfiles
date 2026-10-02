@@ -13,7 +13,7 @@ antigen bundle gem
 antigen bundle git
 antigen bundle heroku
 # antigen bundle history
-antigen bundle zsh-mise
+antigen bundle mise
 antigen bundle node
 antigen bundle npm
 antigen bundle pip
@@ -48,5 +48,3 @@ export ANDROID_SDK=$HOME/Library/Android/sdk
 # export PATH="/opt/homebrew/opt/ncurses/bin:$PATH"
 export PATH="/usr/local/opt/libpq/bin:$PATH"
 export PATH="/usr/local/opt/redis@6.2/bin:$PATH"
-
-eval "$(mise activate zsh)"

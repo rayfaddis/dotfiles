@@ -68,22 +68,15 @@ for Plist in "$HOME"/dotfiles/launchd/*.plist; do
 done
 
 ################################################################################
-# Copy tool versions for ASDF to use
+# Install tool versions with mise (reads ~/.tool-versions)
 ################################################################################
-echo "Overwriting .tool-versions"
-cp ~/dotfiles/tool-versions ~/.tool-versions
+echo "Installing tool versions with mise"
+mise install
 
 ################################################################################
-# Install ASDF plugins and tool versions
+# oh-my-zsh completions cache (antigen doesn't create it; the mise plugin needs it)
 ################################################################################
-echo "Add ASDF plugins and install tool versions"
-asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
-asdf plugin-add java https://github.com/halcyon/asdf-java.git
-asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf plugin-add python
-asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
-asdf plugin update --all
-# asdf install
+mkdir -p "$HOME/.antigen/bundles/robbyrussell/oh-my-zsh/cache/completions"
 
 ################################################################################
 # Global NPM packages
