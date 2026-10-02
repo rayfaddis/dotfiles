@@ -30,6 +30,7 @@ for icon in "$icons_dir"/*/*.icns; do
   fi
 done
 
-if [ "$changed" -eq 1 ]; then
+# Always restart when run by hand; the LaunchAgent only restarts on a change.
+if [ "$changed" -eq 1 ] || [ -t 1 ]; then
   killall Dock
 fi
