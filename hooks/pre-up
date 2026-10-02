@@ -14,47 +14,9 @@ else
 fi
 
 ################################################################################
-# Homebrew requirements
+# Homebrew packages (installs missing and upgrades outdated entries)
 ################################################################################
-HomebrewTaps=(
- # "homebrew/cask-fonts"
-)
-
-for Tap in "${HomebrewTaps[@]}"; do
-  brew tap $Tap
-done
-
-HomebrewFormulas=(
-  "antigen"
-  "fileicon"
-  "golangci-lint"
-  "mise"
-  "ncurses"
-  "neovim"
-  "tmux"
-  "reattach-to-user-namespace"
-  "ripgrep"
-  "tree-sitter-cli"
-)
-for Formula in "${HomebrewFormulas[@]}"; do
-  if [ `which $Formula | grep -c "not found"` -eq 0 ]; then
-    brew install $Formula
-  else
-    brew upgrade $Formula
-  fi
-done
-
-HomebrewCasks=(
-  "font-jetbrains-mono-nerd-font"
-  "kitty"
-)
-for Cask in "${HomebrewCasks[@]}"; do
-  if [ `which $Cask | grep -c "not found"` -eq 0 ]; then
-    brew install --cask $Cask
-  else
-    brew upgrade --cask $Cask
-  fi
-done
+brew bundle --file="$HOME/dotfiles/Brewfile"
 
 ################################################################################
 # LaunchAgents
