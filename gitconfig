@@ -26,3 +26,7 @@
 [user]
   email = ray@faddismail.com
   name = Ray Faddis
+# Machine-specific settings (e.g. a work email), not tracked in the repo. Last,
+# so it overrides the values above. Git skips it if the file doesn't exist.
+[include]
+  path = ~/.gitconfig.local

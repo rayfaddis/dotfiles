@@ -16,5 +16,6 @@ rcup() {
   [ "${RCUP_RELOAD:-1}" = 0 ] || reload
 }
 
-# Gangway tab completion
-[ -f "$HOME/.config/gangway/completions.zsh" ] && source "$HOME/.config/gangway/completions.zsh"
+# Machine-specific config, not tracked in the repo. Keep this last so it can
+# override anything above.
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

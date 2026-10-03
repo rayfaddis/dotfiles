@@ -28,3 +28,6 @@ alias gfp="git fetch --prune" # alternaitve to oh-my-zsh gfa
 alias path='echo $PATH | tr -s ":" "\n"'
 
 alias tmux="tmux -2"
+
+# Machine-specific aliases, not tracked in the repo
+[ -f ~/.aliases.local ] && source ~/.aliases.local
