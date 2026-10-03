@@ -48,6 +48,61 @@ install_terminfo() {
 ui_step "tmux-256color terminfo" install_terminfo
 
 ################################################################################
+# Install tool versions with mise. Runs after linking so ~/.tool-versions, the
+# mise config and ~/.default-gems exist on a fresh machine.
+################################################################################
+install_mise_tools() {
+  mise install || return 1
+  local tool version
+  while read -r tool version _; do
+    ui_verbose && ui_item same "$tool $version"
+  done < <(cd "$HOME" && mise current)
+  ui_detail "$(cd "$HOME" && mise current | wc -l | tr -d ' ') tools"
+}
+ui_step "mise tools" install_mise_tools
+
+################################################################################
+# Global NPM packages
+################################################################################
+GlobalNodeModules=(
+  # "bash-language-server"
+  # "typescript"
+  # "typescript-language-server"
+  # "vscode-langservers-extracted"
+)
+install_npm_globals() {
+  local module
+  for module in "${GlobalNodeModules[@]}"; do
+    npm list -g "$module" >/dev/null 2>&1 || npm install -g "$module" || return 1
+  done
+  ui_detail "${#GlobalNodeModules[@]} packages"
+}
+if [ ${#GlobalNodeModules[@]} -eq 0 ]; then
+  ui_skip "npm globals" "nothing listed"
+else
+  ui_step "npm globals" install_npm_globals
+fi
+
+################################################################################
+# Ruby gems
+################################################################################
+Gems=(
+  # "solargraph"
+)
+install_gems() {
+  local gem
+  for gem in "${Gems[@]}"; do
+    gem list -i "^$gem$" >/dev/null || gem install "$gem" || return 1
+  done
+  ui_detail "${#Gems[@]} gems"
+}
+if [ ${#Gems[@]} -eq 0 ]; then
+  ui_skip "Ruby gems" "nothing listed"
+else
+  ui_step "Ruby gems" install_gems
+fi
+
+################################################################################
 # Summary of the machine's final state
 ################################################################################
 summarize() {

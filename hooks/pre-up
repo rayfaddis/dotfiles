@@ -202,55 +202,7 @@ load_agents() {
 }
 ui_step "LaunchAgents" load_agents
 
-################################################################################
-# Install tool versions with mise (reads ~/.tool-versions)
-################################################################################
-install_mise_tools() {
-  mise install || return 1
-  ui_detail "$(cd "$HOME" && mise current | wc -l | tr -d ' ') tools"
-}
-ui_step "mise tools" install_mise_tools
-
-################################################################################
-# Global NPM packages
-################################################################################
-GlobalNodeModules=(
-  # "bash-language-server"
-  # "typescript"
-  # "typescript-language-server"
-  # "vscode-langservers-extracted"
-)
-install_npm_globals() {
-  local module
-  for module in "${GlobalNodeModules[@]}"; do
-    npm list -g "$module" >/dev/null 2>&1 || npm install -g "$module" || return 1
-  done
-  ui_detail "${#GlobalNodeModules[@]} packages"
-}
-if [ ${#GlobalNodeModules[@]} -eq 0 ]; then
-  ui_skip "npm globals" "nothing listed"
-else
-  ui_step "npm globals" install_npm_globals
-fi
-
-################################################################################
-# Ruby gems
-################################################################################
-Gems=(
-  # "solargraph"
-)
-install_gems() {
-  local gem
-  for gem in "${Gems[@]}"; do
-    gem list -i "^$gem$" >/dev/null || gem install "$gem" || return 1
-  done
-  ui_detail "${#Gems[@]} gems"
-}
-if [ ${#Gems[@]} -eq 0 ]; then
-  ui_skip "Ruby gems" "nothing listed"
-else
-  ui_step "Ruby gems" install_gems
-fi
+# Language tools install in post-up, once ~/.tool-versions and friends are linked.
 
 # Failures are reported in post-up's summary; let rcup carry on linking.
 exit 0
