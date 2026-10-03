@@ -1,17 +1,126 @@
-#!/bin/sh
+#!/bin/bash
+
+source ./ui.sh
+
+ui_section "Configure"
+
+################################################################################
+# Confirm every dotfile is linked to its source
+################################################################################
+check_links() {
+  local dest src count=0 broken=()
+  while IFS=: read -r dest src; do
+    count=$((count + 1))
+    [ "$(readlink "$dest")" = "$src" ] || broken+=("${dest/#$HOME/~}")
+  done < <(lsrc)
+  if [ ${#broken[@]} -gt 0 ]; then
+    ui_detail "${#broken[@]} of $count not linked: ${broken[*]}"
+    return 1
+  fi
+  ui_detail "$count links"
+}
+ui_step "Dotfiles linked" check_links
 
 ################################################################################
 # psqlrc sources ~/.psqlrc.local and errors if it is missing
 ################################################################################
-touch ~/.psqlrc.local
+touch_psqlrc_local() {
+  if [ -f "$HOME/.psqlrc.local" ]; then
+    ui_detail "~/.psqlrc.local exists"
+  else
+    touch "$HOME/.psqlrc.local" && ui_detail "created ~/.psqlrc.local"
+  fi
+}
+ui_step "psql local config" touch_psqlrc_local
 
 ################################################################################
 # Enable italics in terminal
 ################################################################################
-echo "Set 256 colors and italics"
-terminfo="${TMPDIR:-/tmp}/tmux-256color.info"
-/opt/homebrew/opt/ncurses/bin/infocmp tmux-256color > "$terminfo"
-tic -xe tmux-256color "$terminfo"
-rm -f "$terminfo"
+install_terminfo() {
+  local terminfo="${TMPDIR:-/tmp}/tmux-256color.info"
+  /opt/homebrew/opt/ncurses/bin/infocmp tmux-256color >"$terminfo" &&
+    tic -xe tmux-256color "$terminfo"
+  local status=$?
+  rm -f "$terminfo"
+  [ $status -eq 0 ] && ui_detail "compiled to ~/.terminfo"
+  return $status
+}
+ui_step "tmux-256color terminfo" install_terminfo
 
-echo "Done. Run 'exec zsh' to reload your shell."
+################################################################################
+# Summary of the machine's final state
+################################################################################
+summarize() {
+  local start='' ok=0 fail=0 skip=0 kind label secs
+  if [ -f "$UI_STATE" ]; then
+    while IFS='|' read -r kind label secs; do
+      case $kind in
+        start) start=$label ;;
+        ok) ok=$((ok + 1)) ;;
+        fail) fail=$((fail + 1)) ;;
+        skip) skip=$((skip + 1)) ;;
+      esac
+    done <"$UI_STATE"
+  fi
+
+  local steps="$ok ok · $fail failed · $skip skipped"
+  [ -z "$start" ] && steps="$steps (post-up only)"
+  local elapsed=''
+  [ -n "$start" ] && elapsed=" in $(ui_duration $(($(date +%s) - start)))"
+
+  local brewfile="$HOME/dotfiles/Brewfile" total missing brew
+  total=$(grep -c -E '^(brew|cask) ' "$brewfile")
+  missing=$(brew bundle check --verbose --file="$brewfile" 2>/dev/null | grep -c -E '^→ ')
+  brew="$((total - missing))/$total Brewfile entries installed"
+
+  # Wrap the tool list so the box keeps its width; continuation lines are indented.
+  local tool_lines=() row='' item
+  while read -r item; do
+    if [ -n "$row" ] && [ $((${#row} + ${#item} + 3)) -gt $((UI_WIDTH - 14)) ]; then
+      tool_lines+=("$row")
+      row=$item
+    else
+      row=${row:+$row · }$item
+    fi
+  done < <(cd "$HOME" && mise current 2>/dev/null | awk '{sub(/^openjdk-/, "", $2); print $1, $2}')
+  [ -n "$row" ] && tool_lines+=("$row")
+  local tools=("Tools     ${tool_lines[0]:-none}") i
+  for ((i = 1; i < ${#tool_lines[@]}; i++)); do tools+=("          ${tool_lines[i]}"); done
+
+  local plugins theme
+  plugins=$(grep -c -v -E '^\s*(#|$)' "$HOME/dotfiles/zsh_plugins.txt")
+  theme=$(sed -n 's/^ZSH_THEME=//p' "$HOME/dotfiles/zshrc")
+
+  local plist agent agents=()
+  for plist in "$HOME"/dotfiles/launchd/*.plist; do
+    agent=$(basename "$plist" .plist)
+    if launchctl print "gui/$(id -u)/$agent" >/dev/null 2>&1; then
+      agents+=("${agent##*.} loaded")
+    else
+      agents+=("${agent##*.} NOT loaded")
+      fail=$((fail + 1))
+    fi
+  done
+  local agents_line
+  agents_line=$(IFS=,; printf '%s' "${agents[*]}" | sed 's/,/, /g')
+
+  local color=$c_green title="✔ All done$elapsed"
+  if [ "$fail" -gt 0 ]; then
+    color=$c_red title="✖ Finished with problems$elapsed"
+  fi
+
+  echo
+  ui_box "$color" "$title" \
+    "Steps     $steps" \
+    "Homebrew  $brew" \
+    "${tools[@]}" \
+    "Shell     antidote · $plugins plugins · ${theme:-no theme}" \
+    "Agents    $agents_line" \
+    "Git       $(git config user.name) <$(git config user.email)>" \
+    "Log       ${UI_LOG/#$HOME/~}"
+  printf '  Run %sexec zsh%s to reload your shell.\n\n' "$c_bold" "$c_reset"
+
+  rm -f "$UI_STATE"
+  [ "$fail" -eq 0 ]
+}
+summarize

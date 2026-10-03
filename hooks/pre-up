@@ -1,56 +1,97 @@
-#!/bin/sh
+#!/bin/bash
 
-reset -Q
+source ./ui.sh
+
+: >"$UI_LOG"
+printf 'start|%s|\n' "$(date +%s)" >"$UI_STATE"
+
+[ "$UI_TTY" -eq 1 ] && clear
+ui_box "$c_cyan" "dotfiles · rcup" "$(scutil --get LocalHostName 2>/dev/null || hostname -s) · $(date '+%a %b %-d %H:%M')"
+
+ui_section "Install"
 
 ################################################################################
 # Tmux package manager
 ################################################################################
-TPMPath="$HOME/.tmux/plugins/tpm"
-if [ ! -d "$TPMPath" ]; then
-  echo "TPM not found. Installing..."
-  git clone https://github.com/tmux-plugins/tpm "$TPMPath"
-else
-  echo "TPM is already installed."
-fi
+install_tpm() {
+  local tpm="$HOME/.tmux/plugins/tpm"
+  if [ -d "$tpm" ]; then
+    ui_detail "already installed"
+  else
+    git clone https://github.com/tmux-plugins/tpm "$tpm" && ui_detail "installed"
+  fi
+}
+ui_step "tmux plugin manager" install_tpm
 
 ################################################################################
 # Homebrew packages (installs missing and upgrades outdated entries)
 ################################################################################
-brew bundle --file="$HOME/dotfiles/Brewfile"
+brewfile="${RCUP_BREWFILE:-$HOME/dotfiles/Brewfile}"
+install_brew() {
+  local out="${TMPDIR:-/tmp}/dotfiles-rcup.brew" status total changed failed
+  brew bundle --file="$brewfile" 2>&1 | tee "$out"
+  status=${PIPESTATUS[0]}
+  total=$(grep -c -E '^(brew|cask) ' "$brewfile")
+  changed=$(grep -E '^(Installing|Upgrading) ' "$out" | grep -c -v 'has failed!$')
+  failed=$(sed -n -E 's/^(Installing|Upgrading) (.*) has failed!$/\2/p' "$out" | paste -sd, - | sed 's/,/, /g')
+  rm -f "$out"
+  if [ -n "$failed" ]; then
+    ui_detail "failed: $failed"
+  elif [ "$changed" -gt 0 ]; then
+    ui_detail "$total packages · $changed installed or upgraded"
+  else
+    ui_detail "$total packages · up to date"
+  fi
+  return "$status"
+}
+ui_step "Homebrew packages" install_brew
 
 ################################################################################
 # LaunchAgents
 ################################################################################
-for Plist in "$HOME"/dotfiles/launchd/*.plist; do
-  Label=$(basename "$Plist" .plist)
-  echo "Loading LaunchAgent $Label"
-  cp "$Plist" "$HOME/Library/LaunchAgents/"
-  launchctl bootout "gui/$(id -u)/$Label" 2>/dev/null
-  launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$Label.plist"
-done
+load_agents() {
+  local plist label labels=()
+  for plist in "$HOME"/dotfiles/launchd/*.plist; do
+    label=$(basename "$plist" .plist)
+    cp "$plist" "$HOME/Library/LaunchAgents/" || return 1
+    launchctl bootout "gui/$(id -u)/$label" 2>/dev/null
+    launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$label.plist" || return 1
+    labels+=("${label##*.}")
+  done
+  ui_detail "${labels[*]}"
+}
+ui_step "LaunchAgents" load_agents
 
 ################################################################################
 # Install tool versions with mise (reads ~/.tool-versions)
 ################################################################################
-echo "Installing tool versions with mise"
-mise install
+install_mise_tools() {
+  mise install || return 1
+  ui_detail "$(cd "$HOME" && mise current | wc -l | tr -d ' ') tools"
+}
+ui_step "mise tools" install_mise_tools
 
 ################################################################################
 # Global NPM packages
 ################################################################################
 GlobalNodeModules=(
-  # "npm"
-  #
   # "bash-language-server"
   # "typescript"
   # "typescript-language-server"
   # "vscode-langservers-extracted"
 )
-for NodeModule in "${GlobalNodeModules[@]}"; do
-  if [ `npm list -g | grep -c $NodeModule` -eq 0 ]; then
-    npm install -g $NodeModule
-  fi
-done
+install_npm_globals() {
+  local module
+  for module in "${GlobalNodeModules[@]}"; do
+    npm list -g "$module" >/dev/null 2>&1 || npm install -g "$module" || return 1
+  done
+  ui_detail "${#GlobalNodeModules[@]} packages"
+}
+if [ ${#GlobalNodeModules[@]} -eq 0 ]; then
+  ui_skip "npm globals" "nothing listed"
+else
+  ui_step "npm globals" install_npm_globals
+fi
 
 ################################################################################
 # Ruby gems
@@ -58,8 +99,18 @@ done
 Gems=(
   # "solargraph"
 )
-for Gem in "${Gems[@]}"; do
-  if [ `gem list $Gem | grep -c $Gem` -eq 0 ]; then
-    gem install $Gem
-  fi
-done
+install_gems() {
+  local gem
+  for gem in "${Gems[@]}"; do
+    gem list -i "^$gem$" >/dev/null || gem install "$gem" || return 1
+  done
+  ui_detail "${#Gems[@]} gems"
+}
+if [ ${#Gems[@]} -eq 0 ]; then
+  ui_skip "Ruby gems" "nothing listed"
+else
+  ui_step "Ruby gems" install_gems
+fi
+
+# Failures are reported in post-up's summary; let rcup carry on linking.
+exit 0
