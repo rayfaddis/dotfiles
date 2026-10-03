@@ -22,6 +22,33 @@ check_links() {
 ui_step "Dotfiles linked" check_links
 
 ################################################################################
+# rcup never removes links it stops managing, such as files later added to
+# EXCLUDES or deleted from the repo. Remove them and any folders left empty.
+################################################################################
+prune_links() {
+  local managed link dir removed=0
+  managed=$(lsrc | cut -d: -f1)
+  while read -r link; do
+    grep -qxF "$link" <<<"$managed" && continue
+    rm "$link" || return 1
+    ui_item del "${link/#$HOME/~}"
+    removed=$((removed + 1))
+    dir=$(dirname "$link")
+    while [ "$dir" != "$HOME" ] && rmdir "$dir" 2>/dev/null; do
+      dir=$(dirname "$dir")
+    done
+  done < <(find "$HOME" -maxdepth 4 \
+    \( -name Library -o -name .Trash -o -name node_modules -o -name .git \) -prune \
+    -o -type l -lname "$HOME/dotfiles/*" -print 2>/dev/null)
+  if [ "$removed" -gt 0 ]; then
+    ui_detail "$removed removed"
+  else
+    ui_detail "none stale"
+  fi
+}
+ui_step "Stale links" prune_links
+
+################################################################################
 # psqlrc sources ~/.psqlrc.local and errors if it is missing
 ################################################################################
 touch_psqlrc_local() {

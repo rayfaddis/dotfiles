@@ -42,8 +42,9 @@ Shell, editor and tool config for Apple Silicon Macs, managed with
   If a backup fails, rcup stops before linking anything.
 - **Install**: Homebrew packages from `Brewfile` (installs missing ones and
   upgrades outdated ones) and zsh plugins from `zsh_plugins.txt` via antidote.
-- **Configure** (`hooks/post-up`): checks every link, then tmux plugins, custom
-  app icons from `icons/`, and language versions from `tool-versions` via mise.
+- **Configure** (`hooks/post-up`): checks every link and removes old links rcup
+  no longer manages, then tmux plugins, custom app icons from `icons/`, and
+  language versions from `tool-versions` via mise.
   Setting icons needs App Management permission for your terminal.
 
 It ends with a summary of the machine's state. Output from each step goes to
