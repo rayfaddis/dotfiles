@@ -5,8 +5,9 @@ antidote load
 
 [ -f ~/.aliases ] && source ~/.aliases
 
-# ensure dotfiles bin directory is loaded first
+# Ensure dotfiles bin directory is loaded first
 export PATH=$HOME/.bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 
-# export PATH="/opt/homebrew/opt/ncurses/bin:$PATH"
+# Gangway tab completion
+[ -f "$HOME/.config/gangway/completions.zsh" ] && source "$HOME/.config/gangway/completions.zsh"

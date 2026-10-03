@@ -8,14 +8,14 @@
 
 1. Clone this repo into $HOME/dotfiles
 
-2. Install [rcm](https://github.com/thoughtbot/rcm):
+1. Install [rcm](https://github.com/thoughtbot/rcm):
 
 ```bash
   brew tap thoughtbot/formulae
   brew install rcm
 ```
 
-3. Install the dotfiles for the first time:
+1. Install the dotfiles for the first time:
 
 ```bash
   env RCRC=$HOME/dotfiles/rcrc rcup
@@ -29,9 +29,9 @@ first run.
 Please configure the `rcrc` file if you'd like to make personal overrides in a
 different directory.
 
-4. Source your bash
+1. Source your bash
 
-```
+```bash
   src
 ```
 
