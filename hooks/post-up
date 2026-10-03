@@ -19,7 +19,7 @@ check_links() {
   fi
   ui_detail "$count links"
 }
-ui_step "Dotfiles linked" check_links
+ui_step "Dotfiles links checked" check_links
 
 ################################################################################
 # rcup never removes links it stops managing, such as files later added to
@@ -46,7 +46,7 @@ prune_links() {
     ui_detail "none stale"
   fi
 }
-ui_step "Stale links" prune_links
+ui_step "Dotfiles links pruned" prune_links
 
 ################################################################################
 # psqlrc sources ~/.psqlrc.local and errors if it is missing
