@@ -151,6 +151,60 @@ ui_skip() {
   ui_record skip "$1" 0
 }
 
+# Sets repo_line and repo_behind for the git repo in $1. The fetch is capped at
+# 5s so being offline can't stall rcup; counts then come from the last fetch.
+ui_repo_status() {
+  local dir=$1 fetched=1 pid i counts ahead sync dirty n
+  [ "$UI_TTY" -eq 1 ] && printf '  %sChecking %s…%s' "$c_dim" "${dir/#$HOME/~}" "$c_reset"
+  GIT_TERMINAL_PROMPT=0 git -C "$dir" fetch --quiet 2>/dev/null &
+  pid=$!
+  for ((i = 0; i < 50; i++)); do
+    kill -0 "$pid" 2>/dev/null || break
+    sleep 0.1
+  done
+  if kill -0 "$pid" 2>/dev/null; then
+    { kill "$pid"; wait "$pid"; } 2>/dev/null
+    fetched=0
+  else
+    wait "$pid" || fetched=0
+  fi
+  [ "$UI_TTY" -eq 1 ] && printf '\r\e[K'
+
+  repo_behind=0
+  if counts=$(git -C "$dir" rev-list --left-right --count 'HEAD...@{u}' 2>/dev/null); then
+    read -r ahead repo_behind <<<"$counts"
+    case "$ahead,$repo_behind" in
+      0,0) sync="up to date with origin" ;;
+      *,0) sync="$ahead ahead of origin" ;;
+      0,*) sync="$repo_behind behind origin" ;;
+      *) sync="$ahead ahead, $repo_behind behind origin" ;;
+    esac
+  else
+    sync="no upstream"
+  fi
+  [ "$fetched" -eq 0 ] && sync="$sync (origin not checked)"
+
+  n=$(git -C "$dir" status --porcelain | wc -l | tr -d ' ')
+  case $n in
+    0) dirty=clean ;;
+    1) dirty="1 uncommitted change" ;;
+    *) dirty="$n uncommitted changes" ;;
+  esac
+
+  repo_line="$(git -C "$dir" branch --show-current || echo detached) @ $(git -C "$dir" rev-parse --short HEAD) · $sync · $dirty"
+}
+
+# Prints "Options: A=1, B=0" for rcup options set away from their defaults, or
+# nothing. The rcup wrapper always exports RCUP_RELOAD=1, so defaults are skipped.
+ui_active_flags() {
+  local name default set=()
+  for name in RCUP_VERBOSE:1 RCUP_RAW:0 RCUP_RELOAD:1 RCUP_BREWFILE: NO_COLOR:; do
+    default=${name#*:} name=${name%%:*}
+    [ -n "${!name+x}" ] && [ "${!name}" != "$default" ] && set+=("$name=${!name}")
+  done
+  [ ${#set[@]} -gt 0 ] && (IFS=,; printf 'Options: %s' "${set[*]}" | sed 's/,/, /g')
+}
+
 ui_cleanup() { [ "$UI_TTY" -eq 1 ] && printf '\e[?25h'; rm -f "$UI_DETAIL" "$UI_ITEMS"; }
 trap ui_cleanup EXIT
 trap 'ui_cleanup; exit 130' INT TERM

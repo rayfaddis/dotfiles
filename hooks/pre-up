@@ -6,7 +6,14 @@ source ./ui.sh
 printf 'start|%s|\n' "$(date +%s)" >"$UI_STATE"
 
 [ "$UI_TTY" -eq 1 ] && clear
-ui_box "$c_cyan" "dotfiles · rcup" "$(scutil --get LocalHostName 2>/dev/null || hostname -s) · $(date '+%a %b %-d %H:%M')"
+ui_repo_status "$HOME/dotfiles"
+banner=("$repo_line")
+flags=$(ui_active_flags) && banner+=("$flags")
+ui_box "$c_cyan" "dotfiles · rcup" "${banner[@]}"
+if [ "$repo_behind" -gt 0 ]; then
+  printf '  %s⚠ %s commit%s behind origin.%s Run %sgit -C ~/dotfiles pull%s, then rcup again.\n' \
+    "$c_bold$c_yellow" "$repo_behind" "$([ "$repo_behind" -eq 1 ] || echo s)" "$c_reset" "$c_bold" "$c_reset"
+fi
 
 ui_section "Install"
 
