@@ -15,6 +15,44 @@ if [ "$repo_behind" -gt 0 ]; then
     "$c_bold$c_yellow" "$repo_behind" "$([ "$repo_behind" -eq 1 ] || echo s)" "$c_reset" "$c_bold" "$c_reset"
 fi
 
+ui_section "Prepare"
+
+################################################################################
+# Back up existing files that rcup would otherwise prompt to overwrite
+################################################################################
+# Runs before anything is installed. Moving the files out of the way lets rcup
+# link without prompting; if a move fails, exit non-zero so rcup stops before
+# linking anything.
+conflicts=()
+while IFS=: read -r dest src; do
+  [ -e "$dest" ] || [ -L "$dest" ] || continue
+  [ "$(readlink "$dest")" = "$src" ] && continue
+  # rcm replaces identical copies itself.
+  [ ! -L "$dest" ] && [ -f "$dest" ] && cmp -s "$dest" "$src" && continue
+  conflicts+=("$dest")
+done < <(lsrc)
+
+backup_dir="$HOME/.dotfiles-backup/$(date +%Y-%m-%d-%H%M%S)"
+back_up_conflicts() {
+  local dest rel
+  for dest in "${conflicts[@]}"; do
+    rel=${dest#"$HOME"/}
+    mkdir -p "$backup_dir/$(dirname "$rel")" && mv "$dest" "$backup_dir/$rel" || return 1
+    ui_item moved "~/$rel"
+  done
+  ui_detail "${#conflicts[@]} moved to ${backup_dir/#$HOME/~}"
+}
+if [ ${#conflicts[@]} -eq 0 ]; then
+  ui_skip "Existing dotfiles" "no conflicts"
+else
+  ui_step "Existing dotfiles" back_up_conflicts
+  if tail -n 1 "$UI_STATE" | grep -q '^fail|'; then
+    printf '\n  %s✖ Could not back up existing files; stopping before anything is linked.%s\n\n' "$c_bold$c_red" "$c_reset"
+    exit 1
+  fi
+  printf 'backup|%s|\n' "$backup_dir" >>"$UI_STATE"
+fi
+
 ui_section "Install"
 
 ################################################################################

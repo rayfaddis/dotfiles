@@ -2,7 +2,8 @@
 #
 #   ui_step "Label" some_function   run with a spinner, log output, print result
 #   ui_detail "text"                from inside a step: short note for its result line
-#   ui_item add|up|fail|same "text" from inside a step: a line listed under its result
+#   ui_item KIND "text"             from inside a step: a line listed under its result;
+#                                   KIND is add, up, fail, same, moved or hint
 #   ui_skip "Label" "reason"        record a step that had nothing to do
 #
 # Command output goes to $UI_LOG. Steps list everything by default; RCUP_VERBOSE=0
@@ -81,6 +82,8 @@ ui_print_items() {
       add) icon=+ color=$c_green ;;
       up) icon=↑ color=$c_cyan ;;
       fail) icon=✖ color=$c_red ;;
+      moved) icon=↪ color=$c_yellow ;;
+      hint) icon=→ color=$c_yellow ;;
       *) icon=· color=$c_dim ;;
     esac
     printf '      %s%s%s %s%s%s\n' "$color" "$icon" "$c_reset" \

@@ -51,11 +51,12 @@ ui_step "tmux-256color terminfo" install_terminfo
 # Summary of the machine's final state
 ################################################################################
 summarize() {
-  local start='' ok=0 fail=0 skip=0 kind label secs
+  local start='' backup='' ok=0 fail=0 skip=0 kind label secs
   if [ -f "$UI_STATE" ]; then
     while IFS='|' read -r kind label secs; do
       case $kind in
         start) start=$label ;;
+        backup) backup=$label ;;
         ok) ok=$((ok + 1)) ;;
         fail) fail=$((fail + 1)) ;;
         skip) skip=$((skip + 1)) ;;
@@ -109,15 +110,19 @@ summarize() {
     color=$c_red title="✖ Finished with problems$elapsed"
   fi
 
+  local lines=(
+    "Steps     $steps"
+    "Homebrew  $brew"
+    "${tools[@]}"
+    "Shell     antidote · $plugins plugins · ${theme:-no theme}"
+    "Agents    $agents_line"
+    "Git       $(git config user.name) <$(git config user.email)>"
+  )
+  [ -n "$backup" ] && lines+=("Backup    ${backup/#$HOME/~}")
+  lines+=("Log       ${UI_LOG/#$HOME/~}")
+
   echo
-  ui_box "$color" "$title" \
-    "Steps     $steps" \
-    "Homebrew  $brew" \
-    "${tools[@]}" \
-    "Shell     antidote · $plugins plugins · ${theme:-no theme}" \
-    "Agents    $agents_line" \
-    "Git       $(git config user.name) <$(git config user.email)>" \
-    "Log       ${UI_LOG/#$HOME/~}"
+  ui_box "$color" "$title" "${lines[@]}"
   ui_flags
 
   # RCUP_RELOAD=1 is set by the rcup wrapper in zshrc, which reloads on success.
