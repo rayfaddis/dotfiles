@@ -205,19 +205,11 @@ summarize() {
   missing=$(brew bundle check --verbose --file="$brewfile" 2>/dev/null | grep -c -E '^→ ')
   brew="$((total - missing))/$total Brewfile entries installed"
 
-  # Wrap the tool list so the box keeps its width; continuation lines are indented.
-  local tool_lines=() row='' item
-  while read -r item; do
-    if [ -n "$row" ] && [ $((${#row} + ${#item} + 3)) -gt $((UI_WIDTH - 14)) ]; then
-      tool_lines+=("$row")
-      row=$item
-    else
-      row=${row:+$row · }$item
-    fi
-  done < <(cd "$HOME" && mise current 2>/dev/null | awk '{sub(/^openjdk-/, "", $2); print $1, $2}')
-  [ -n "$row" ] && tool_lines+=("$row")
-  local tools=("Tools     ${tool_lines[0]:-none}") i
-  for ((i = 1; i < ${#tool_lines[@]}; i++)); do tools+=("          ${tool_lines[i]}"); done
+  # The mise tools step lists each version; here just the count.
+  local tools
+  total=$(cd "$HOME" && mise ls --current 2>/dev/null | wc -l | tr -d ' ')
+  missing=$(cd "$HOME" && mise ls --current --missing 2>/dev/null | wc -l | tr -d ' ')
+  tools="$((total - missing))/$total mise tools installed"
 
   local plugins theme
   plugins=$(grep -c -v -E '^\s*(#|$)' "$HOME/dotfiles/zsh_plugins.txt")
@@ -231,7 +223,7 @@ summarize() {
   local lines=(
     "Steps     $steps"
     "Homebrew  $brew"
-    "${tools[@]}"
+    "Tools     $tools"
     "Shell     antidote · $plugins plugins · ${theme:-no theme}"
     "Git       $(git config user.name) <$(git config user.email)>"
   )
