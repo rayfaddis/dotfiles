@@ -43,7 +43,7 @@ back_up_conflicts() {
   ui_detail "${#conflicts[@]} moved to ${backup_dir/#$HOME/~}"
 }
 if [ ${#conflicts[@]} -eq 0 ]; then
-  ui_skip "Existing dotfiles" "no conflicts"
+  ui_step "Existing dotfiles" ui_detail "no conflicts"
 else
   ui_step "Existing dotfiles" back_up_conflicts
   if tail -n 1 "$UI_STATE" | grep -q '^fail|'; then
