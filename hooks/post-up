@@ -238,9 +238,16 @@ summarize() {
   missing=$(cd "$HOME" && mise ls --current --missing 2>/dev/null | wc -l | tr -d ' ')
   tools="$((total - missing))/$total mise tools installed"
 
-  local plugins theme
-  plugins=$(grep -c -v -E '^\s*(#|$)' "$HOME/dotfiles/zsh_plugins.txt")
-  theme=$(sed -n 's/^ZSH_THEME=//p' "$HOME/dotfiles/zshrc")
+  # An entry is installed when its clone (and path:, if given) is in antidote's cache.
+  local antidote_home repo spec shell
+  antidote_home=$(zsh -c 'source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh && antidote home')
+  total=0 missing=0
+  while read -r repo spec; do
+    total=$((total + 1))
+    [[ $spec =~ (^| )path:([^ ]+) ]] && spec=/${BASH_REMATCH[2]} || spec=''
+    [ -e "$antidote_home/github.com/$repo$spec" ] || missing=$((missing + 1))
+  done < <(grep -v -E '^\s*(#|$)' "$HOME/dotfiles/zsh_plugins.txt")
+  shell="$((total - missing))/$total zsh plugins installed"
 
   local color=$c_green title="✔ All done$elapsed"
   if [ "$fail" -gt 0 ]; then
@@ -251,7 +258,7 @@ summarize() {
     "Steps     $steps"
     "Homebrew  $brew"
     "Tools     $tools"
-    "Shell     antidote · $plugins plugins · ${theme:-no theme}"
+    "Shell     $shell"
   )
   [ -n "$backup" ] && lines+=("Backup    ${backup/#$HOME/~}")
   lines+=("Log       ${UI_LOG/#$HOME/~}")
