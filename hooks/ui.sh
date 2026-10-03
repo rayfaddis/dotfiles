@@ -2,13 +2,16 @@
 #
 #   ui_step "Label" some_function   run with a spinner, log output, print result
 #   ui_detail "text"                from inside a step: short note for its result line
+#   ui_item add|up|fail|same "text" from inside a step: a line listed under its result
 #   ui_skip "Label" "reason"        record a step that had nothing to do
 #
-# Command output goes to $UI_LOG. RCUP_VERBOSE=1 streams it instead.
+# Command output goes to $UI_LOG. Steps list only what changed; RCUP_VERBOSE=1
+# makes them list everything (ui_verbose). RCUP_RAW=1 streams raw output instead.
 
 UI_LOG="$HOME/Library/Logs/dotfiles/rcup.log"
 UI_STATE="${TMPDIR:-/tmp}/dotfiles-rcup.state"
 UI_DETAIL="${TMPDIR:-/tmp}/dotfiles-rcup.detail"
+UI_ITEMS="${TMPDIR:-/tmp}/dotfiles-rcup.items"
 UI_WIDTH=64
 
 export LC_CTYPE="${LC_CTYPE:-en_US.UTF-8}"  # so ${#var} counts characters, not bytes
@@ -58,6 +61,24 @@ ui_record() { printf '%s|%s|%s\n' "$1" "$2" "$3" >>"$UI_STATE"; }
 
 ui_detail() { printf '%s' "$*" >"$UI_DETAIL"; }
 
+ui_verbose() { [ "${RCUP_VERBOSE:-0}" = 1 ]; }
+
+ui_item() { printf '%s|%s\n' "$1" "$2" >>"$UI_ITEMS"; }
+
+ui_print_items() {
+  local kind text icon color
+  while IFS='|' read -r kind text; do
+    case $kind in
+      add) icon=+ color=$c_green ;;
+      up) icon=↑ color=$c_cyan ;;
+      fail) icon=✖ color=$c_red ;;
+      *) icon=· color=$c_dim ;;
+    esac
+    printf '      %s%s%s %s%s%s\n' "$color" "$icon" "$c_reset" \
+      "$([ "$kind" = same ] && printf '%s' "$c_dim")" "$text" "$c_reset"
+  done <"$UI_ITEMS"
+}
+
 ui_result() {
   local icon=$1 color=$2 label=$3 secs=$4 detail=$5 time=''
   [ -n "$secs" ] && time=$(ui_duration "$secs")
@@ -82,9 +103,10 @@ ui_step() {
   local label=$1; shift
   local start=$SECONDS status detail
   : >"$UI_DETAIL"
+  : >"$UI_ITEMS"
   printf '\n==> %s\n' "$label" >>"$UI_LOG"
 
-  if [ "${RCUP_VERBOSE:-0}" = 1 ]; then
+  if [ "${RCUP_RAW:-0}" = 1 ]; then
     printf '  %s▸%s %s%s%s\n' "$c_cyan" "$c_reset" "$c_bold" "$label" "$c_reset"
     "$@" 2>&1 | tee -a "$UI_LOG"
     status=${PIPESTATUS[0]}
@@ -104,9 +126,11 @@ ui_step() {
   if [ "$status" -eq 0 ]; then
     ui_result ✔ "$c_green" "$label" "$secs" "$detail"
     ui_record ok "$label" "$secs"
+    ui_print_items
   else
     ui_result ✖ "$c_red" "$label" "$secs" "${detail:-exit $status}"
     ui_record fail "$label" "$secs"
+    ui_print_items
     # Show the tail of this step's log so the failure is visible without opening it.
     sed -n '/^==> '"$label"'$/,$p' "$UI_LOG" | tail -n 12 | sed "s/^/      ${c_dim}│${c_reset} /"
   fi
@@ -118,6 +142,6 @@ ui_skip() {
   ui_record skip "$1" 0
 }
 
-ui_cleanup() { [ "$UI_TTY" -eq 1 ] && printf '\e[?25h'; rm -f "$UI_DETAIL"; }
+ui_cleanup() { [ "$UI_TTY" -eq 1 ] && printf '\e[?25h'; rm -f "$UI_DETAIL" "$UI_ITEMS"; }
 trap ui_cleanup EXIT
 trap 'ui_cleanup; exit 130' INT TERM

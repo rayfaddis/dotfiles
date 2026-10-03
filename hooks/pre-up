@@ -28,23 +28,118 @@ ui_step "tmux plugin manager" install_tpm
 ################################################################################
 brewfile="${RCUP_BREWFILE:-$HOME/dotfiles/Brewfile}"
 install_brew() {
-  local out="${TMPDIR:-/tmp}/dotfiles-rcup.brew" status total changed failed
+  local tmp="${TMPDIR:-/tmp}/dotfiles-rcup"
+  local out="$tmp.brew" outdated="$tmp.outdated" versions="$tmp.versions"
+  local status total line verb name old new changed=0 failed=()
+
+  # brew bundle doesn't print versions; capture "name (old) < new" first.
+  brew outdated --verbose >"$outdated" 2>/dev/null
   brew bundle --file="$brewfile" 2>&1 | tee "$out"
   status=${PIPESTATUS[0]}
+  { brew list --formula --versions; brew list --cask --versions; } >"$versions" 2>/dev/null
+
+  version_of() { awk -v n="$1" '$1 == n { print $NF }' "$versions"; }
+
+  # Lines look like "Using x", "Installing x", "Upgrading x", "Installing x has failed!".
+  while IFS= read -r line; do
+    case $line in
+      *" has failed!") verb=fail name=${line#* } name=${name% has failed!} ;;
+      "Installing "* | "Upgrading "* | "Using "*) verb=${line%% *} name=${line#* } ;;
+      *) continue ;;
+    esac
+    name=${name##*/}
+    case $verb in
+      fail)
+        failed+=("$name")
+        ui_item fail "$name"
+        ;;
+      Installing)
+        grep -q -x "Installing $name has failed!" "$out" && continue
+        changed=$((changed + 1))
+        ui_item add "$name $(version_of "$name")"
+        ;;
+      Upgrading)
+        grep -q -x "Upgrading $name has failed!" "$out" && continue
+        changed=$((changed + 1))
+        old=$(awk -v n="$name" '$1 == n { gsub(/[()]/, "", $2); print $2 }' "$outdated")
+        new=$(version_of "$name")
+        ui_item up "$name ${old:+$old → }$new"
+        ;;
+      Using)
+        ui_verbose && ui_item same "$name $(version_of "$name")"
+        ;;
+    esac
+  done <"$out"
+  rm -f "$out" "$outdated" "$versions"
+
   total=$(grep -c -E '^(brew|cask) ' "$brewfile")
-  changed=$(grep -E '^(Installing|Upgrading) ' "$out" | grep -c -v 'has failed!$')
-  failed=$(sed -n -E 's/^(Installing|Upgrading) (.*) has failed!$/\2/p' "$out" | paste -sd, - | sed 's/,/, /g')
-  rm -f "$out"
-  if [ -n "$failed" ]; then
-    ui_detail "failed: $failed"
+  if [ ${#failed[@]} -gt 0 ]; then
+    ui_detail "$total packages · ${#failed[@]} failed"
   elif [ "$changed" -gt 0 ]; then
-    ui_detail "$total packages · $changed installed or upgraded"
+    ui_detail "$total packages · $changed changed"
   else
     ui_detail "$total packages · up to date"
   fi
   return "$status"
 }
 ui_step "Homebrew packages" install_brew
+
+################################################################################
+# zsh plugins (clone missing bundles, then pull updates)
+################################################################################
+update_zsh_plugins() {
+  local plugins="$HOME/dotfiles/zsh_plugins.txt" out="${TMPDIR:-/tmp}/dotfiles-rcup.antidote"
+  local status line repo count repos changed=0 failed=0 home
+
+  # antidote is a zsh function. `antidote bundle` clones anything missing; its
+  # generated script is discarded because the shell builds its own on load.
+  zsh -c 'source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh || exit 1
+          antidote bundle <"$1" >/dev/null && antidote update --bundles' _ "$plugins" 2>&1 |
+    sed $'s/\e\\[[0-9;]*m//g' | tee "$out"
+  status=${PIPESTATUS[0]}
+
+  while IFS= read -r line; do
+    case $line in
+      "# antidote cloning "*)
+        repo=${line#\# antidote cloning } repo=${repo%...}
+        changed=$((changed + 1))
+        ui_item add "$repo"
+        ;;
+      "antidote: updated: "*)
+        line=${line#antidote: updated: }
+        changed=$((changed + 1))
+        ui_item up "${line/ -> / → }"
+        ;;
+      "antidote: update failed for "*)
+        repo=${line#*\'} repo=${repo%\'}
+        failed=$((failed + 1))
+        ui_item fail "$repo"
+        ;;
+    esac
+  done <"$out"
+
+  if ui_verbose; then
+    home=$(zsh -c 'source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh && antidote home')
+    while IFS= read -r repo; do
+      grep -q -E "(cloning|updated:|failed for '?)[: ]*$repo" "$out" && continue
+      ui_item same "$repo $(git -C "$home/github.com/$repo" rev-parse --short HEAD 2>/dev/null)"
+    done < <(sed -n 's/^antidote: checking for updates: //p' "$out")
+  fi
+  rm -f "$out"
+
+  count=$(grep -c -v -E '^\s*(#|$)' "$plugins")
+  repos=$(grep -v -E '^\s*(#|$)' "$plugins" | awk '{print $1}' | sort -u | wc -l | tr -d ' ')
+  if [ "$failed" -gt 0 ]; then
+    ui_detail "$count plugins from $repos repos · $failed failed"
+    return 1
+  elif [ "$changed" -gt 0 ]; then
+    ui_detail "$count plugins from $repos repos · $changed changed"
+  else
+    ui_detail "$count plugins from $repos repos · up to date"
+  fi
+  return "$status"
+}
+ui_step "zsh plugins" update_zsh_plugins
 
 ################################################################################
 # LaunchAgents
