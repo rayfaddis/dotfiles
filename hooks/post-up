@@ -119,6 +119,7 @@ summarize() {
     "Git       $(git config user.name) <$(git config user.email)>" \
     "Log       ${UI_LOG/#$HOME/~}"
   printf '  Run %sexec zsh%s to reload your shell.\n\n' "$c_bold" "$c_reset"
+  ui_flags
 
   rm -f "$UI_STATE"
   [ "$fail" -eq 0 ]

@@ -5,8 +5,9 @@
 #   ui_item add|up|fail|same "text" from inside a step: a line listed under its result
 #   ui_skip "Label" "reason"        record a step that had nothing to do
 #
-# Command output goes to $UI_LOG. Steps list only what changed; RCUP_VERBOSE=1
-# makes them list everything (ui_verbose). RCUP_RAW=1 streams raw output instead.
+# Command output goes to $UI_LOG. Steps list everything by default; RCUP_VERBOSE=0
+# lists only what changed (ui_verbose). RCUP_RAW=1 streams raw output instead.
+# ui_flags prints these as a reminder at the end of a run.
 
 UI_LOG="$HOME/Library/Logs/dotfiles/rcup.log"
 UI_STATE="${TMPDIR:-/tmp}/dotfiles-rcup.state"
@@ -61,7 +62,14 @@ ui_record() { printf '%s|%s|%s\n' "$1" "$2" "$3" >>"$UI_STATE"; }
 
 ui_detail() { printf '%s' "$*" >"$UI_DETAIL"; }
 
-ui_verbose() { [ "${RCUP_VERBOSE:-0}" = 1 ]; }
+ui_verbose() { [ "${RCUP_VERBOSE:-1}" != 0 ]; }
+
+ui_flags() {
+  printf '  %sOptions%s  %sRCUP_VERBOSE=0 rcup%s  list only what changed\n' "$c_bold" "$c_reset" "$c_cyan" "$c_reset"
+  printf '           %sRCUP_RAW=1 rcup%s      stream raw command output\n' "$c_cyan" "$c_reset"
+  printf '           %sNO_COLOR=1 rcup%s      plain text, no spinner\n' "$c_cyan" "$c_reset"
+  printf '           %srcup -K%s              skip these hooks, just link\n\n' "$c_cyan" "$c_reset"
+}
 
 ui_item() { printf '%s|%s\n' "$1" "$2" >>"$UI_ITEMS"; }
 
