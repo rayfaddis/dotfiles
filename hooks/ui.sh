@@ -55,8 +55,9 @@ ui_box() {
   printf '%s╰%s╯%s\n' "$color" "$(ui_repeat ─ $((width - 2)))" "$c_reset"
 }
 
+# ui_section "Title" [color]; magenta unless a color is given.
 ui_section() {
-  printf '\n%s%s %s %s%s\n' "$c_bold$c_magenta" "──" "$1" "$(ui_repeat ─ $((UI_WIDTH - ${#1} - 4)))" "$c_reset"
+  printf '\n%s%s %s %s%s\n' "$c_bold${2:-$c_magenta}" "──" "$1" "$(ui_repeat ─ $((UI_WIDTH - ${#1} - 4)))" "$c_reset"
 }
 
 ui_record() { printf '%s|%s|%s\n' "$1" "$2" "$3" >>"$UI_STATE"; }
@@ -70,7 +71,7 @@ ui_flags() {
   printf '           %sRCUP_RAW=1 rcup%s      stream raw command output\n' "$c_cyan" "$c_reset"
   printf '           %sNO_COLOR=1 rcup%s      plain text, no spinner\n' "$c_cyan" "$c_reset"
   printf '           %sRCUP_RELOAD=0 rcup%s   don'"'"'t restart the shell afterward\n' "$c_cyan" "$c_reset"
-  printf '           %srcup -K%s              skip these hooks, just link\n\n' "$c_cyan" "$c_reset"
+  printf '           %srcup -K%s              skip these hooks, just link\n' "$c_cyan" "$c_reset"
 }
 
 ui_item() { printf '%s|%s\n' "$1" "$2" >>"$UI_ITEMS"; }
