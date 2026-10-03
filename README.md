@@ -29,11 +29,13 @@ first run.
 Please configure the `rcrc` file if you'd like to make personal overrides in a
 different directory.
 
-1. Source your bash
+1. Reload your shell
 
 ```bash
-  src
+  reload
 ```
+
+After this, `rcup` reloads the shell for you when it finishes.
 
 ## Updating Dotfiles
 

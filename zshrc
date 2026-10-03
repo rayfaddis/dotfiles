@@ -9,5 +9,12 @@ antidote load
 export PATH=$HOME/.bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
 
+# A child process can't restart the shell that ran it, so reload from here once
+# rcup succeeds. RCUP_RELOAD=0 rcup skips it.
+rcup() {
+  RCUP_RELOAD=${RCUP_RELOAD:-1} command rcup "$@" || return
+  [ "${RCUP_RELOAD:-1}" = 0 ] || reload
+}
+
 # Gangway tab completion
 [ -f "$HOME/.config/gangway/completions.zsh" ] && source "$HOME/.config/gangway/completions.zsh"

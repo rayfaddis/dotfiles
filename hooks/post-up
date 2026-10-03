@@ -118,8 +118,16 @@ summarize() {
     "Agents    $agents_line" \
     "Git       $(git config user.name) <$(git config user.email)>" \
     "Log       ${UI_LOG/#$HOME/~}"
-  printf '  Run %sexec zsh%s to reload your shell.\n\n' "$c_bold" "$c_reset"
   ui_flags
+
+  # RCUP_RELOAD=1 is set by the rcup wrapper in zshrc, which reloads on success.
+  if [ "${RCUP_RELOAD:-0}" = 1 ] && [ "$fail" -eq 0 ]; then
+    printf '  %s↻ Reloading your shell…%s %s(other windows and tmux panes: run reload)%s\n\n' \
+      "$c_bold$c_cyan" "$c_reset" "$c_dim" "$c_reset"
+  else
+    printf '  %s➜ Run %sreload%s%s to load the new config in this shell%s %s(and other open windows)%s\n\n' \
+      "$c_bold$c_yellow" "$c_reset$c_bold" "$c_reset" "$c_bold$c_yellow" "$c_reset" "$c_dim" "$c_reset"
+  fi
 
   rm -f "$UI_STATE"
   [ "$fail" -eq 0 ]

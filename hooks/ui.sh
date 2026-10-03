@@ -68,6 +68,7 @@ ui_flags() {
   printf '  %sOptions%s  %sRCUP_VERBOSE=0 rcup%s  list only what changed\n' "$c_bold" "$c_reset" "$c_cyan" "$c_reset"
   printf '           %sRCUP_RAW=1 rcup%s      stream raw command output\n' "$c_cyan" "$c_reset"
   printf '           %sNO_COLOR=1 rcup%s      plain text, no spinner\n' "$c_cyan" "$c_reset"
+  printf '           %sRCUP_RELOAD=0 rcup%s   don'"'"'t restart the shell afterward\n' "$c_cyan" "$c_reset"
   printf '           %srcup -K%s              skip these hooks, just link\n\n' "$c_cyan" "$c_reset"
 }
 
