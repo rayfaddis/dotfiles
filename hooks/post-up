@@ -48,6 +48,55 @@ install_terminfo() {
 ui_step "tmux-256color terminfo" install_terminfo
 
 ################################################################################
+# tmux plugins. TPM reads plugin names from ~/.tmux.conf, so this runs after
+# linking. Commits are compared before and after to list what changed.
+################################################################################
+install_tmux_plugins() {
+  local root="$HOME/.tmux/plugins" plugins=() before=() plugin dir after i changed=0 failed=0
+  if [ ! -d "$root/tpm" ]; then
+    git clone --quiet https://github.com/tmux-plugins/tpm "$root/tpm" || return 1
+    ui_item add "tmux-plugins/tpm"
+    changed=$((changed + 1))
+  fi
+
+  while read -r plugin; do
+    plugins+=("$plugin")
+    before+=("$(git -C "$root/${plugin##*/}" rev-parse --short HEAD 2>/dev/null)")
+  done < <(sed -n -E "s/^[[:space:]]*set(-option)? +-g +@plugin +['\"]([^'\"]+)['\"].*/\2/p" "$HOME/.tmux.conf" |
+    grep -v -x 'tmux-plugins/tpm')
+
+  "$root/tpm/bin/install_plugins"
+  "$root/tpm/bin/update_plugins" all
+
+  for ((i = 0; i < ${#plugins[@]}; i++)); do
+    plugin=${plugins[i]}
+    after=$(git -C "$root/${plugin##*/}" rev-parse --short HEAD 2>/dev/null)
+    if [ -z "$after" ]; then
+      failed=$((failed + 1))
+      ui_item fail "$plugin"
+    elif [ -z "${before[i]}" ]; then
+      changed=$((changed + 1))
+      ui_item add "$plugin $after"
+    elif [ "$after" != "${before[i]}" ]; then
+      changed=$((changed + 1))
+      ui_item up "$plugin ${before[i]} → $after"
+    else
+      ui_verbose && ui_item same "$plugin $after"
+    fi
+  done
+
+  if [ "$failed" -gt 0 ]; then
+    ui_detail "${#plugins[@]} plugins · $failed failed"
+    return 1
+  elif [ "$changed" -gt 0 ]; then
+    ui_detail "${#plugins[@]} plugins · $changed changed"
+  else
+    ui_detail "${#plugins[@]} plugins · up to date"
+  fi
+}
+ui_step "tmux plugins" install_tmux_plugins
+
+################################################################################
 # Install tool versions with mise. Runs after linking so ~/.tool-versions, the
 # mise config and ~/.default-gems exist on a fresh machine.
 ################################################################################

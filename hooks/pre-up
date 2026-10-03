@@ -56,19 +56,6 @@ fi
 ui_section "Install"
 
 ################################################################################
-# Tmux package manager
-################################################################################
-install_tpm() {
-  local tpm="$HOME/.tmux/plugins/tpm"
-  if [ -d "$tpm" ]; then
-    ui_detail "already installed"
-  else
-    git clone https://github.com/tmux-plugins/tpm "$tpm" && ui_detail "installed"
-  fi
-}
-ui_step "tmux plugin manager" install_tpm
-
-################################################################################
 # Homebrew packages (installs missing and upgrades outdated entries)
 ################################################################################
 brewfile="${RCUP_BREWFILE:-$HOME/dotfiles/Brewfile}"
