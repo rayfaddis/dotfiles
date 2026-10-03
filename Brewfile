@@ -1,4 +1,5 @@
 brew "antidote"
+brew "ccusage"
 brew "fileicon"
 brew "golangci-lint"
 brew "mise"
