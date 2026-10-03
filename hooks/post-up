@@ -252,7 +252,6 @@ summarize() {
     "Homebrew  $brew"
     "Tools     $tools"
     "Shell     antidote · $plugins plugins · ${theme:-no theme}"
-    "Git       $(git config user.name) <$(git config user.email)>"
   )
   [ -n "$backup" ] && lines+=("Backup    ${backup/#$HOME/~}")
   lines+=("Log       ${UI_LOG/#$HOME/~}")
