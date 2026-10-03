@@ -102,6 +102,28 @@ install_tmux_plugins() {
 ui_step "tmux plugins" install_tmux_plugins
 
 ################################################################################
+# Custom app icons from icons/. Runs here, not from a LaunchAgent, because only
+# the terminal can be granted App Management to write into app bundles.
+################################################################################
+apply_icons() {
+  local out app set=0 failed=0
+  out=$("$HOME/dotfiles/bin/refresh-icons" 2>&1) || { echo "$out"; return 1; }
+  echo "$out"
+  while read -r app; do
+    ui_item up "$app"
+    set=$((set + 1))
+  done < <(sed -n 's/.*Set icon for //p' <<<"$out")
+  # Failures are listed but don't fail the step: some apps, like Safari on the
+  # sealed system volume, can never be changed.
+  while read -r app; do
+    ui_item fail "$app"
+    failed=$((failed + 1))
+  done < <(sed -n 's/.*Failed to set icon for //p' <<<"$out")
+  ui_detail "$set set · $failed failed"
+}
+ui_step "App icons" apply_icons
+
+################################################################################
 # Install tool versions with mise. Runs after linking so ~/.tool-versions, the
 # mise config and ~/.default-gems exist on a fresh machine.
 ################################################################################
@@ -201,19 +223,6 @@ summarize() {
   plugins=$(grep -c -v -E '^\s*(#|$)' "$HOME/dotfiles/zsh_plugins.txt")
   theme=$(sed -n 's/^ZSH_THEME=//p' "$HOME/dotfiles/zshrc")
 
-  local plist agent agents=()
-  for plist in "$HOME"/dotfiles/launchd/*.plist; do
-    agent=$(basename "$plist" .plist)
-    if launchctl print "gui/$(id -u)/$agent" >/dev/null 2>&1; then
-      agents+=("${agent##*.} loaded")
-    else
-      agents+=("${agent##*.} NOT loaded")
-      fail=$((fail + 1))
-    fi
-  done
-  local agents_line
-  agents_line=$(IFS=,; printf '%s' "${agents[*]}" | sed 's/,/, /g')
-
   local color=$c_green title="✔ All done$elapsed"
   if [ "$fail" -gt 0 ]; then
     color=$c_red title="✖ Finished with problems$elapsed"
@@ -224,7 +233,6 @@ summarize() {
     "Homebrew  $brew"
     "${tools[@]}"
     "Shell     antidote · $plugins plugins · ${theme:-no theme}"
-    "Agents    $agents_line"
     "Git       $(git config user.name) <$(git config user.email)>"
   )
   [ -n "$backup" ] && lines+=("Backup    ${backup/#$HOME/~}")

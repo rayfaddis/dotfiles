@@ -192,22 +192,6 @@ update_zsh_plugins() {
 }
 ui_step "zsh plugins" update_zsh_plugins
 
-################################################################################
-# LaunchAgents
-################################################################################
-load_agents() {
-  local plist label labels=()
-  for plist in "$HOME"/dotfiles/launchd/*.plist; do
-    label=$(basename "$plist" .plist)
-    cp "$plist" "$HOME/Library/LaunchAgents/" || return 1
-    launchctl bootout "gui/$(id -u)/$label" 2>/dev/null
-    launchctl bootstrap "gui/$(id -u)" "$HOME/Library/LaunchAgents/$label.plist" || return 1
-    labels+=("${label##*.}")
-  done
-  ui_detail "${labels[*]}"
-}
-ui_step "LaunchAgents" load_agents
-
 # Language tools install in post-up, once ~/.tool-versions and friends are linked.
 
 # Failures are reported in post-up's summary; let rcup carry on linking.

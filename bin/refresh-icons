@@ -3,7 +3,8 @@
 # Apply custom icons from ~/dotfiles/icons/<App Name>/*.icns to
 # /Applications/<App Name>.app. Skips apps that already have a custom icon, so
 # it is cheap to run often. App updates replace the bundle and drop the icon;
-# the refresh-icons LaunchAgent reruns this when /Applications changes.
+# rcup reruns this, or run it by hand after an update. The terminal needs App
+# Management permission (System Settings > Privacy & Security) to modify apps.
 
 PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
@@ -30,7 +31,7 @@ for icon in "$icons_dir"/*/*.icns; do
   fi
 done
 
-# Always restart when run by hand; the LaunchAgent only restarts on a change.
+# Always restart when run by hand; under rcup, only restart on a change.
 if [ "$changed" -eq 1 ] || [ -t 1 ]; then
   killall Dock
 fi
