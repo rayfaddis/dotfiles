@@ -76,6 +76,20 @@ ui_flags() {
 
 ui_item() { printf '%s|%s\n' "$1" "$2" >>"$UI_ITEMS"; }
 
+# ui_subitems name...: a dim, wrapped "a · b · c" list under the previous item.
+ui_subitems() {
+  local row='' name
+  for name in "$@"; do
+    if [ -n "$row" ] && [ $((${#row} + ${#name} + 3)) -gt $((UI_WIDTH - 10)) ]; then
+      ui_item sub "$row"
+      row=$name
+    else
+      row=${row:+$row · }$name
+    fi
+  done
+  [ -n "$row" ] && ui_item sub "$row"
+}
+
 ui_print_items() {
   local kind text icon color
   while IFS='|' read -r kind text; do
@@ -85,6 +99,10 @@ ui_print_items() {
       fail) icon=✖ color=$c_red ;;
       moved) icon=↪ color=$c_yellow ;;
       hint) icon=→ color=$c_yellow ;;
+      sub)
+        printf '          %s%s%s\n' "$c_dim" "$text" "$c_reset"
+        continue
+        ;;
       *) icon=· color=$c_dim ;;
     esac
     printf '      %s%s%s %s%s%s\n' "$color" "$icon" "$c_reset" \

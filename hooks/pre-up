@@ -134,22 +134,36 @@ update_zsh_plugins() {
     sed $'s/\e\\[[0-9;]*m//g' | tee "$out"
   status=${PIPESTATUS[0]}
 
+  # For repos that supply several entries (ohmyzsh), list them under the repo:
+  # "path:plugins/git" shows as "git", "path:lib" as "lib".
+  repo_entries() {
+    local names=()
+    while read -r _ spec; do
+      spec=${spec#path:} spec=${spec%% *}
+      names+=("$(basename "${spec%.zsh-theme}")")
+    done < <(grep -E "^$1( |$)" "$plugins")
+    [ ${#names[@]} -gt 1 ] && ui_subitems "${names[@]}"
+  }
+
   while IFS= read -r line; do
     case $line in
       "# antidote cloning "*)
         repo=${line#\# antidote cloning } repo=${repo%...}
         changed=$((changed + 1))
         ui_item add "$repo"
+        repo_entries "$repo"
         ;;
       "antidote: updated: "*)
         line=${line#antidote: updated: }
         changed=$((changed + 1))
         ui_item up "${line/ -> / → }"
+        repo_entries "${line%% *}"
         ;;
       "antidote: update failed for "*)
         repo=${line#*\'} repo=${repo%\'}
         failed=$((failed + 1))
         ui_item fail "$repo"
+        repo_entries "$repo"
         ;;
     esac
   done <"$out"
@@ -159,6 +173,7 @@ update_zsh_plugins() {
     while IFS= read -r repo; do
       grep -q -E "(cloning|updated:|failed for '?)[: ]*$repo" "$out" && continue
       ui_item same "$repo $(git -C "$home/github.com/$repo" rev-parse --short HEAD 2>/dev/null)"
+      repo_entries "$repo"
     done < <(sed -n 's/^antidote: checking for updates: //p' "$out")
   fi
   rm -f "$out"
