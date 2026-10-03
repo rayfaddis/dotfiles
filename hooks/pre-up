@@ -84,6 +84,10 @@ install_brew() {
       fail)
         failed+=("$name")
         ui_item fail "$name"
+        # A cask fails when its app was installed outside Homebrew.
+        if grep -q -x "cask \"$name\".*" "$brewfile" && grep -q 'already an App at' "$out"; then
+          ui_item hint "app already installed; to let Homebrew manage it: brew install --cask --adopt $name"
+        fi
         ;;
       Installing)
         grep -q -x "Installing $name has failed!" "$out" && continue

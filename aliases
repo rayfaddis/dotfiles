@@ -2,7 +2,6 @@
 alias ll="ls -al"
 
 # misc
-alias fix-camera="sudo killall VDCAssistant"
 alias flush-dns="sudo killall -HUP mDNSResponder; sudo killall mDNSResponderHelper; sudo dscacheutil -flushcache"
 
 # Ruby - basic conveniences
