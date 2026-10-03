@@ -65,8 +65,13 @@ install_tmux_plugins() {
   done < <(sed -n -E "s/^[[:space:]]*set(-option)? +-g +@plugin +['\"]([^'\"]+)['\"].*/\2/p" "$HOME/.tmux.conf" |
     grep -v -x 'tmux-plugins/tpm')
 
-  "$root/tpm/bin/install_plugins"
-  "$root/tpm/bin/update_plugins" all
+  # TPM clones from https://git::@github.com/..., which makes git hand an empty
+  # login to the keychain helper on every pull; without a usable keychain that
+  # stalls for minutes behind the spinner. The repos are public, so skip helpers.
+  GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0= \
+    GIT_TERMINAL_PROMPT=0 "$root/tpm/bin/install_plugins"
+  GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0= \
+    GIT_TERMINAL_PROMPT=0 "$root/tpm/bin/update_plugins" all
 
   for ((i = 0; i < ${#plugins[@]}; i++)); do
     plugin=${plugins[i]}
